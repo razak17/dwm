@@ -6,6 +6,12 @@
 /* appearance */
 static const unsigned int borderpx = 1; /* border pixel of windows */
 static const unsigned int snap = 32;    /* snap pixel */
+static unsigned int gappih    = 20;       /* horiz inner gap between windows */
+static unsigned int gappiv    = 10;       /* vert inner gap between windows */
+static unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
+static unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
+static int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
+static int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar = 1;           /* 0 means no bar */
 static const int topbar = 1;            /* 0 means bottom bar */
 static const char *fonts[] = {"Noto Sans Mono:size=9"};
@@ -39,12 +45,29 @@ static const float mfact = 0.55;  /* factor of master area size [0.05..0.95] */
 static const int nmaster = 1;     /* number of clients in master area */
 static const int resizehints = 1; // 1 - respect size hints in tiled resizals
 
+// #include "vanitygaps.c"
+
+#define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
+#include "vanitygaps.c"
 static const Layout layouts[] = {
     /* symbol     arrange function */
     {"[]=", tile}, /* first entry is default */
-    {"><>", NULL}, /* no layout function means floating behavior */
-    {"[M]", monocle},
+	{ "TTT",	bstack },		/* Master on top, slaves on bottom */
+
+	{ "[@]",	spiral },		/* Fibonacci spiral */
+	{ "[\\]",	dwindle },		/* Decreasing in size right and leftward */
+
+	{ "[D]",	deck },			/* Master on left, slaves in monocle-like mode on right */
+ 	{ "[M]",	monocle },		/* All windows on top of eachother */
+
+	{ "|M|",	centeredmaster },		/* Master in middle, slaves on sides */
+	{ ">M>",	centeredfloatingmaster },	/* Same but master floats */
+
+	{ "><>",	NULL },			/* no layout function means floating behavior */
+	{ NULL,		NULL },
 };
+
+// #include "vanitygaps.c"
 
 /* key definitions */
 #define MODKEY Mod4Mask
@@ -92,16 +115,16 @@ static Key keys[] = {
     {MODKEY | ControlMask, XK_v, incnmaster, {.i = -1}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}},
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
-    /* {MODKEY, XK_minus, setgaps, {.i = -1}},
-    {MODKEY, XK_equal, setgaps, {.i = +1}},
-    {MODKEY | ShiftMask, XK_equal, setgaps, {.i = 0}}, */
+	{MODKEY | ControlMask,XK_a,togglegaps,{1}},
+	{MODKEY|ShiftMask,XK_equal,defaultgaps,	{0}},
+	{MODKEY,XK_equal,incrgaps,{.i = +1 }},
+	{MODKEY,XK_minus,incrgaps,{.i = -1 }},
     {MODKEY, XK_e, setlayout, {.v = &layouts[0]}},
     {MODKEY, XK_g, setlayout, {.v = &layouts[1]}},
     {MODKEY, XK_m, setlayout, {.v = &layouts[2]}},
     {MODKEY, XK_f, setlayout, {.v = &layouts[3]}},
     {MODKEY, XK_Return, zoom, {0}},
     {MODKEY, XK_0, view, {.ui = ~0}},
-    // {MODKEY, XK_0, view, {0}},
     {MODKEY, XK_comma, focusmon, {.i = -1}},
     {MODKEY, XK_period, focusmon, {.i = +1}},
     {MODKEY, XK_x, killclient, {0}},
@@ -117,7 +140,7 @@ static Key keys[] = {
     {ALTMOD | ControlMask, XK_k, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_n, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
-    {MODKEY | ControlMask, XK_m, spawn,
+    /* {MODKEY | ControlMask, XK_m, spawn,
      SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     {MODKEY, XK_minus, spawn,
      SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
@@ -125,14 +148,11 @@ static Key keys[] = {
      SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
     {MODKEY, XK_equal, spawn,
      SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_equal, spawn,
-     SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioMute, spawn,
-     SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioRaiseVolume, spawn,
-     SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioLowerVolume, spawn,
-     SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_Left, spawn,
+     SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")}, */
+    {0, XF86XK_AudioMute, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
+    {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
+    {0, XF86XK_AudioLowerVolume, spawn, SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
@@ -156,12 +176,10 @@ static Button buttons[] = {
     {ClkStatusText, ShiftMask, Button3, spawn,
      SHCMD(TERMINAL " -e nvim ~/suckless/dwmblocks/config.h")},
     {ClkClientWin, MODKEY, Button1, movemouse, {0}},
-    // { ClkClientWin,         MODKEY,         Button2,        defaultgaps,
-    // {0} },
+    {ClkClientWin, MODKEY, Button2, defaultgaps,{0} },
     {ClkClientWin, MODKEY, Button3, resizemouse, {0}},
-    // { ClkClientWin,		MODKEY,		Button4,	incrgaps,
-    // {.i = +1} }, { ClkClientWin,		MODKEY, Button5,
-    // incrgaps,	{.i = -1} },
+    {ClkClientWin,	MODKEY,	Button4,incrgaps,{.i = +1} },
+    {ClkClientWin,MODKEY, Button5,incrgaps,{.i = -1} },
     {ClkTagBar, 0, Button1, view, {0}},
     {ClkTagBar, 0, Button3, toggleview, {0}},
     {ClkTagBar, MODKEY, Button1, tag, {0}},
