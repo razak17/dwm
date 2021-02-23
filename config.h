@@ -103,7 +103,7 @@ static const char *kpcmd[] = {"keepassxc", NULL};
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
-    {MODKEY, XK_p, spawn, {.v = dmenucmd}},
+    {MODKEY, XK_d, spawn, {.v = dmenucmd}},
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
     {MODKEY | ShiftMask, XK_e, spawn, {.v = filecmd}},
@@ -120,10 +120,16 @@ static Key keys[] = {
 	{MODKEY|ShiftMask,XK_equal,defaultgaps,	{0}},
 	{MODKEY,XK_equal,incrgaps,{.i = +1 }},
 	{MODKEY,XK_minus,incrgaps,{.i = -1 }},
-    {MODKEY, XK_e, setlayout, {.v = &layouts[0]}},
-    {MODKEY, XK_g, setlayout, {.v = &layouts[1]}},
-    {MODKEY, XK_m, setlayout, {.v = &layouts[2]}},
-    {MODKEY, XK_f, setlayout, {.v = &layouts[3]}},
+	{MODKEY,XK_e,setlayout,{.v = &layouts[0]} }, /* tile */
+	{MODKEY|ShiftMask,XK_e,setlayout,{.v = &layouts[1]} }, /* bstack */
+	{MODKEY,XK_y,setlayout,{.v = &layouts[2]} }, /* spiral */
+	{MODKEY|ShiftMask,XK_y,setlayout,{.v = &layouts[3]} }, /* dwindle */
+	{MODKEY,XK_n,setlayout,{.v = &layouts[4]} }, /* deck */
+	{MODKEY|ShiftMask,XK_n,setlayout,{.v = &layouts[5]} }, /* monocle */
+	{MODKEY,XK_i,setlayout,{.v = &layouts[6]} }, /* centeredmaster */
+	{MODKEY|ShiftMask,XK_i,setlayout,{.v = &layouts[7]} }, /* centeredfloatingmaster */
+	// {MODKEY,XK_f,togglefullscr,{0} },
+	{MODKEY|ShiftMask,XK_f,setlayout,{.v = &layouts[8]} },
     {MODKEY, XK_Return, zoom, {0}},
     {MODKEY, XK_0, view, {.ui = ~0}},
     {MODKEY, XK_comma, focusmon, {.i = -1}},
@@ -136,25 +142,30 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
     {MODKEY | ShiftMask, XK_h, cyclelayout, {.i = -1}},
     {MODKEY | ShiftMask, XK_l, cyclelayout, {.i = +1}},
+    /* {MODKEY | ControlMask, XK_m, spawn,
+    SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
+    {MODKEY, XK_minus, spawn,
+    SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_minus, spawn,
+    SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
+    {MODKEY, XK_equal, spawn,
+    SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_Left, spawn,
+    SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")}, */
     {ALTMOD | ControlMask, XK_l, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_h, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_k, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_n, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
-    /* {MODKEY | ControlMask, XK_m, spawn,
-     SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    {MODKEY, XK_minus, spawn,
-     SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_minus, spawn,
-     SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
-    {MODKEY, XK_equal, spawn,
-     SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_Left, spawn,
-     SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")}, */
     {0, XF86XK_AudioMute, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioLowerVolume, spawn, SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
+	{0, XF86XK_PowerOff, spawn, SHCMD("sysact") },
+	{0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 50+") },
+	{0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 50-") },
+	{0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1") },
+	{0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0") },
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8)};
@@ -163,8 +174,7 @@ static Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
  * ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
-/* click                event mask      button          function argument
- */
+/* click   event mask      button  function argument */
 #ifndef __OpenBSD__
     {ClkWinTitle, 0, Button2, zoom, {0}},
     {ClkStatusText, 0, Button1, sigdwmblocks, {.i = 1}},
