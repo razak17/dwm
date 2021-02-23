@@ -4,16 +4,15 @@
 #define TERMCLASS "alacritty"
 
 /* appearance */
-static const unsigned int borderpx = 1; /* border pixel of windows */
-static const unsigned int snap = 32;    /* snap pixel */
-static unsigned int gappih    = 20;       /* horiz inner gap between windows */
-static unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
-static int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
-static int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
-static const int showbar = 1;           /* 0 means no bar */
-static const int topbar = 1;            /* 0 means bottom bar */
+static const unsigned int borderpx = 1; // border pixel of windows
+static const unsigned int snap = 32;    // snap pixel
+static unsigned int gappih = 3;         // horiz inner gap
+static unsigned int gappiv = 3;         // vert inner gap
+static unsigned int gappoh = 5;         // horiz outer gap
+static unsigned int gappov = 5;         // vert outer gap
+static int smartgaps = 0;               // 1 - no outer gap when only one window
+static const int showbar = 1;           // 0 means no bar
+static const int topbar = 1;            // 0 means bottom bar
 static const char *fonts[] = {"Noto Sans Mono:size=9"};
 static const char dmenufont[] = "Noto Sans Mono:size=9";
 static const char col_gray1[] = "#1e2127";
@@ -22,7 +21,7 @@ static const char col_gray3[] = "#bbbbbb";
 static const char col_gray4[] = "#030303";
 static const char col_cyan[] = "#7ec0ee";
 static const char *colors[][3] = {
-    /*               fg         bg         border   */
+    /* fg   bg  border   */
     [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
     [SchemeSel] = {col_gray4, col_cyan, col_cyan},
 };
@@ -48,24 +47,25 @@ static const int resizehints = 1; // 1 - respect size hints in tiled resizals
 
 // #include "vanitygaps.c"
 
-#define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
+#define FORCE_VSPLIT                                                           \
+  1 /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    {"[]=", tile}, /* first entry is default */
-	{ "TTT",	bstack },		/* Master on top, slaves on bottom */
+    {"[]=", tile},   /* first entry is default */
+    {"TTT", bstack}, /* Master on top, slaves on bottom */
 
-	{ "[@]",	spiral },		/* Fibonacci spiral */
-	{ "[\\]",	dwindle },		/* Decreasing in size right and leftward */
+    {"[@]", spiral},   /* Fibonacci spiral */
+    {"[\\]", dwindle}, /* Decreasing in size right and leftward */
 
-	{ "[D]",	deck },			/* Master on left, slaves in monocle-like mode on right */
- 	{ "[M]",	monocle },		/* All windows on top of eachother */
+    {"[D]", deck},    /* Master on left, slaves in monocle-like mode on right */
+    {"[M]", monocle}, /* All windows on top of eachother */
 
-	{ "|M|",	centeredmaster },		/* Master in middle, slaves on sides */
-	{ ">M>",	centeredfloatingmaster },	/* Same but master floats */
+    {"|M|", centeredmaster},         /* Master in middle, slaves on sides */
+    {">M>", centeredfloatingmaster}, /* Same but master floats */
 
-	{ "><>",	NULL },			/* no layout function means floating behavior */
-	{ NULL,		NULL },
+    {"><>", NULL}, /* no layout function means floating behavior */
+    {NULL, NULL},
 };
 
 // #include "vanitygaps.c"
@@ -116,20 +116,23 @@ static Key keys[] = {
     {MODKEY | ControlMask, XK_v, incnmaster, {.i = -1}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}},
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
-	{MODKEY | ControlMask,XK_a,togglegaps,{1}},
-	{MODKEY|ShiftMask,XK_equal,defaultgaps,	{0}},
-	{MODKEY,XK_equal,incrgaps,{.i = +1 }},
-	{MODKEY,XK_minus,incrgaps,{.i = -1 }},
-	{MODKEY,XK_e,setlayout,{.v = &layouts[0]} }, /* tile */
-	{MODKEY|ShiftMask,XK_e,setlayout,{.v = &layouts[1]} }, /* bstack */
-	{MODKEY,XK_y,setlayout,{.v = &layouts[2]} }, /* spiral */
-	{MODKEY|ShiftMask,XK_y,setlayout,{.v = &layouts[3]} }, /* dwindle */
-	{MODKEY,XK_n,setlayout,{.v = &layouts[4]} }, /* deck */
-	{MODKEY|ShiftMask,XK_n,setlayout,{.v = &layouts[5]} }, /* monocle */
-	{MODKEY,XK_i,setlayout,{.v = &layouts[6]} }, /* centeredmaster */
-	{MODKEY|ShiftMask,XK_i,setlayout,{.v = &layouts[7]} }, /* centeredfloatingmaster */
-	// {MODKEY,XK_f,togglefullscr,{0} },
-	{MODKEY|ShiftMask,XK_f,setlayout,{.v = &layouts[8]} },
+    {MODKEY | ControlMask, XK_a, togglegaps, {1}},
+    {MODKEY | ShiftMask, XK_equal, defaultgaps, {0}},
+    {MODKEY, XK_equal, incrgaps, {.i = +1}},
+    {MODKEY | ControlMask, XK_d, incrgaps, {.i = -1}},
+    {MODKEY, XK_e, setlayout, {.v = &layouts[0]}},             /* tile */
+    {MODKEY | ShiftMask, XK_e, setlayout, {.v = &layouts[1]}}, /* bstack */
+    {MODKEY, XK_y, setlayout, {.v = &layouts[2]}},             /* spiral */
+    {MODKEY | ShiftMask, XK_y, setlayout, {.v = &layouts[3]}}, /* dwindle */
+    {MODKEY, XK_n, setlayout, {.v = &layouts[4]}},             /* deck */
+    {MODKEY | ShiftMask, XK_n, setlayout, {.v = &layouts[5]}}, /* monocle */
+    {MODKEY, XK_i, setlayout, {.v = &layouts[6]}}, /* centeredmaster */
+    {MODKEY | ShiftMask,
+     XK_i,
+     setlayout,
+     {.v = &layouts[7]}}, /* centeredfloatingmaster */
+    // {MODKEY,XK_f,togglefullscr,{0} },
+    {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}},
     {MODKEY, XK_Return, zoom, {0}},
     {MODKEY, XK_0, view, {.ui = ~0}},
     {MODKEY, XK_comma, focusmon, {.i = -1}},
@@ -157,15 +160,18 @@ static Key keys[] = {
     {ALTMOD | ControlMask, XK_k, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_n, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
-    {0, XF86XK_AudioMute, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
-    {0, XF86XK_AudioLowerVolume, spawn, SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
+    {0, XF86XK_AudioMute, spawn,
+     SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
+    {0, XF86XK_AudioRaiseVolume, spawn,
+     SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
+    {0, XF86XK_AudioLowerVolume, spawn,
+     SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
-	{0, XF86XK_PowerOff, spawn, SHCMD("sysact") },
-	{0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 50+") },
-	{0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 50-") },
-	{0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1") },
-	{0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0") },
+    {0, XF86XK_PowerOff, spawn, SHCMD("sysact")},
+    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 500+")},
+    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 500-")},
+    {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
+    {0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0")},
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8)};
@@ -187,10 +193,10 @@ static Button buttons[] = {
     {ClkStatusText, ShiftMask, Button3, spawn,
      SHCMD(TERMINAL " -e nvim ~/suckless/dwmblocks/config.h")},
     {ClkClientWin, MODKEY, Button1, movemouse, {0}},
-    {ClkClientWin, MODKEY, Button2, defaultgaps,{0} },
+    {ClkClientWin, MODKEY, Button2, defaultgaps, {0}},
     {ClkClientWin, MODKEY, Button3, resizemouse, {0}},
-    {ClkClientWin,	MODKEY,	Button4,incrgaps,{.i = +1} },
-    {ClkClientWin,MODKEY, Button5,incrgaps,{.i = -1} },
+    {ClkClientWin, MODKEY, Button4, incrgaps, {.i = +1}},
+    {ClkClientWin, MODKEY, Button5, incrgaps, {.i = -1}},
     {ClkTagBar, 0, Button1, view, {0}},
     {ClkTagBar, 0, Button3, toggleview, {0}},
     {ClkTagBar, MODKEY, Button1, tag, {0}},
