@@ -168,8 +168,8 @@ static Key keys[] = {
      SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
     {0, XF86XK_PowerOff, spawn, SHCMD("sysact")},
-    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 500+")},
-    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 500-")},
+    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 250+")},
+    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 250-")},
     {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
     {0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0")},
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
