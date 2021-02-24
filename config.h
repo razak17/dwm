@@ -54,6 +54,9 @@ static const Layout layouts[] = {
     /* symbol     arrange function */
     {"[]=", tile},   /* first entry is default */
     {"TTT", bstack}, /* Master on top, slaves on bottom */
+    { "===",      bstackhoriz },
+    { "HHH",      grid },
+    { "###",      nrowgrid },
 
     {"[@]", spiral},   /* Fibonacci spiral */
     {"[\\]", dwindle}, /* Decreasing in size right and leftward */
@@ -109,6 +112,7 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_e, spawn, {.v = filecmd}},
     {MODKEY | ShiftMask, XK_a, spawn, {.v = ahkcmd}},
     {MODKEY | ShiftMask, XK_k, spawn, {.v = kpcmd}},
+    {ALTMOD, XK_Return, zoom, {0}},
     {MODKEY, XK_b, togglebar, {0}},
     {MODKEY, XK_n, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
@@ -116,10 +120,22 @@ static Key keys[] = {
     {MODKEY | ControlMask, XK_v, incnmaster, {.i = -1}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}},
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
+    {MODKEY, XK_0, view, {.ui = ~0}},
+    {MODKEY, XK_comma, focusmon, {.i = -1}},
+    {MODKEY, XK_period, focusmon, {.i = +1}},
+    {MODKEY, XK_x, killclient, {0}},
+    {MODKEY | ShiftMask, XK_q, quit, {0}},
+    {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
+    {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
+    {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
+
+    // Gaps
     {MODKEY | ControlMask, XK_a, togglegaps, {1}},
     {MODKEY | ShiftMask, XK_equal, defaultgaps, {0}},
     {MODKEY, XK_equal, incrgaps, {.i = +1}},
     {MODKEY | ControlMask, XK_d, incrgaps, {.i = -1}},
+
+    // Layouts
     {MODKEY, XK_e, setlayout, {.v = &layouts[0]}},             /* tile */
     {MODKEY | ShiftMask, XK_e, setlayout, {.v = &layouts[1]}}, /* bstack */
     {MODKEY, XK_y, setlayout, {.v = &layouts[2]}},             /* spiral */
@@ -127,39 +143,25 @@ static Key keys[] = {
     {MODKEY, XK_n, setlayout, {.v = &layouts[4]}},             /* deck */
     {MODKEY | ShiftMask, XK_n, setlayout, {.v = &layouts[5]}}, /* monocle */
     {MODKEY, XK_i, setlayout, {.v = &layouts[6]}}, /* centeredmaster */
-    {MODKEY | ShiftMask,
-     XK_i,
-     setlayout,
-     {.v = &layouts[7]}}, /* centeredfloatingmaster */
-    // {MODKEY,XK_f,togglefullscr,{0} },
-    {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}},
-    {MODKEY, XK_Return, zoom, {0}},
-    {MODKEY, XK_0, view, {.ui = ~0}},
-    {MODKEY, XK_comma, focusmon, {.i = -1}},
-    {MODKEY, XK_period, focusmon, {.i = +1}},
-    {MODKEY, XK_x, killclient, {0}},
+    {MODKEY | ShiftMask, XK_i, setlayout, {.v = &layouts[7]}}, // centeredfloatingmaster
+    {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}}, // floating
     {MODKEY, XK_space, setlayout, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
-    {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
-    {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
-    {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
     {MODKEY | ShiftMask, XK_h, cyclelayout, {.i = -1}},
     {MODKEY | ShiftMask, XK_l, cyclelayout, {.i = +1}},
-    /* {MODKEY | ControlMask, XK_m, spawn,
-    SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    {MODKEY, XK_minus, spawn,
-    SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_minus, spawn,
-    SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
-    {MODKEY, XK_equal, spawn,
-    SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_Left, spawn,
-    SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")}, */
+
+    // shiftview
     {ALTMOD | ControlMask, XK_l, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_h, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_k, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_n, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
+
+    {MODKEY | ControlMask, XK_m, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
+    // {MODKEY, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
+    // {MODKEY | ShiftMask, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
+    // {MODKEY, XK_equal, spawn,SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
+    // {MODKEY | ShiftMask, XK_Left, spawn,SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioMute, spawn,
      SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioRaiseVolume, spawn,
