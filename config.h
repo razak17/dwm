@@ -54,9 +54,9 @@ static const Layout layouts[] = {
     /* symbol     arrange function */
     {"[]=", tile},   /* first entry is default */
     {"TTT", bstack}, /* Master on top, slaves on bottom */
-    { "===",      bstackhoriz },
-    { "HHH",      grid },
-    { "###",      nrowgrid },
+    {"===", bstackhoriz},
+    {"HHH", grid},
+    {"###", nrowgrid},
 
     {"[@]", spiral},   /* Fibonacci spiral */
     {"[\\]", dwindle}, /* Decreasing in size right and leftward */
@@ -100,6 +100,7 @@ static const char *firefox[] = {"firefox", NULL};
 static const char *filecmd[] = {"thunar", NULL};
 static const char *ahkcmd[] = {"autokey-gtk", NULL};
 static const char *kpcmd[] = {"keepassxc", NULL};
+static const char *lxcmd[] = {"lxappearance", NULL};
 
 #include "shiftview.c"
 #include <X11/XF86keysym.h>
@@ -110,6 +111,7 @@ static Key keys[] = {
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
     {MODKEY | ShiftMask, XK_e, spawn, {.v = filecmd}},
+    {MODKEY | ShiftMask, XK_x, spawn, {.v = lxcmd}},
     {MODKEY | ShiftMask, XK_a, spawn, {.v = ahkcmd}},
     {MODKEY | ShiftMask, XK_k, spawn, {.v = kpcmd}},
     {ALTMOD, XK_Return, zoom, {0}},
@@ -125,7 +127,7 @@ static Key keys[] = {
     {MODKEY, XK_period, focusmon, {.i = +1}},
     {MODKEY, XK_x, killclient, {0}},
     {MODKEY | ShiftMask, XK_q, quit, {0}},
-    {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
+    // {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
     {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
 
@@ -143,7 +145,10 @@ static Key keys[] = {
     {MODKEY, XK_n, setlayout, {.v = &layouts[4]}},             /* deck */
     {MODKEY | ShiftMask, XK_n, setlayout, {.v = &layouts[5]}}, /* monocle */
     {MODKEY, XK_i, setlayout, {.v = &layouts[6]}}, /* centeredmaster */
-    {MODKEY | ShiftMask, XK_i, setlayout, {.v = &layouts[7]}}, // centeredfloatingmaster
+    {MODKEY | ShiftMask,
+     XK_i,
+     setlayout,
+     {.v = &layouts[7]}}, // centeredfloatingmaster
     {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}}, // floating
     {MODKEY, XK_space, setlayout, {0}},
     {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
@@ -157,11 +162,14 @@ static Key keys[] = {
     {ALTMOD | ControlMask, XK_n, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
 
-    {MODKEY | ControlMask, XK_m, spawn, SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    // {MODKEY, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
-    // {MODKEY | ShiftMask, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
-    // {MODKEY, XK_equal, spawn,SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
-    // {MODKEY | ShiftMask, XK_Left, spawn,SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ControlMask, XK_m, spawn,
+     SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
+    // {MODKEY, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 5; kill -44
+    // $(pidof dwmblocks)")}, {MODKEY | ShiftMask, XK_minus,
+    // spawn,SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
+    // {MODKEY, XK_equal, spawn,SHCMD("pamixer --allow-boost -i 5; kill -44
+    // $(pidof dwmblocks)")}, {MODKEY | ShiftMask, XK_Left, spawn,SHCMD("pamixer
+    // --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioMute, spawn,
      SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioRaiseVolume, spawn,
@@ -174,7 +182,7 @@ static Key keys[] = {
     {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 250-")},
     {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
     {0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0")},
-    TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
+    TAGKEYS(XK_o, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_i, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8)};
 
