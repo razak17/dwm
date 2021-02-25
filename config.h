@@ -98,7 +98,7 @@ static const char *dmenucmd[] = {
 static const char *termcmd[] = {"alacritty", NULL};
 static const char *firefox[] = {"firefox", NULL};
 static const char *filecmd[] = {"thunar", NULL};
-static const char *ahkcmd[] = {"autokey-gtk", NULL};
+static const char *akcmd[] = {"autokey-gtk", NULL};
 static const char *kpcmd[] = {"keepassxc", NULL};
 static const char *lxcmd[] = {"lxappearance", NULL};
 
@@ -110,13 +110,13 @@ static Key keys[] = {
     {MODKEY, XK_d, spawn, {.v = dmenucmd}},
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
-    {MODKEY | ShiftMask, XK_e, spawn, {.v = filecmd}},
+    {MODKEY | ShiftMask, XK_Return, spawn, {.v = filecmd}},
     {MODKEY | ShiftMask, XK_x, spawn, {.v = lxcmd}},
-    {MODKEY | ShiftMask, XK_a, spawn, {.v = ahkcmd}},
-    {MODKEY | ShiftMask, XK_k, spawn, {.v = kpcmd}},
+    {MODKEY | ShiftMask, XK_a, spawn, {.v = akcmd}},
+    {ShiftMask | ControlMask, XK_F2, spawn, ESHCMD("keepassxc &> /dev/null &")},
     {ALTMOD, XK_Return, zoom, {0}},
-    {MODKEY, XK_b, togglebar, {0}},
-    {MODKEY, XK_n, focusstack, {.i = +1}},
+    {MODKEY | ShiftMask, XK_b, togglebar, {0}},
+    {MODKEY, XK_b, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
     {MODKEY | ControlMask, XK_h, incnmaster, {.i = +1}},
     {MODKEY | ControlMask, XK_v, incnmaster, {.i = -1}},
@@ -126,7 +126,7 @@ static Key keys[] = {
     {MODKEY, XK_comma, focusmon, {.i = -1}},
     {MODKEY, XK_period, focusmon, {.i = +1}},
     {MODKEY, XK_x, killclient, {0}},
-    {MODKEY | ShiftMask, XK_q, quit, {0}},
+    {MODKEY | ControlMask, XK_e, quit, {0}},
     // {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
     {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
@@ -181,7 +181,7 @@ static Key keys[] = {
     // Screenshot
     {MODKEY, XK_F10, spawn, ESHCMD("screenshot --all")},
     {MODKEY | ControlMask, XK_F10, spawn, ESHCMD("screenshot --focused")},
-    {False, XK_F9, spawn, ESHCMD("screenshot --select")},
+    {MODKEY, XK_F9, spawn, ESHCMD("screenshot --select")},
 
     // Power
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
