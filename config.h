@@ -162,6 +162,7 @@ static Key keys[] = {
     {ALTMOD | ControlMask, XK_n, shiftview, {.i = -1}},
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
 
+    // Audio
     {MODKEY | ControlMask, XK_m, spawn,
      SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     // {MODKEY, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 5; kill -44
@@ -176,8 +177,17 @@ static Key keys[] = {
      SHCMD("pamixer --allow-boost -i 3; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioLowerVolume, spawn,
      SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
+
+    // Screenshot
+    {MODKEY, XK_F10, spawn, ESHCMD("screenshot --all")},
+    {MODKEY | ControlMask, XK_F10, spawn, ESHCMD("screenshot --focused")},
+    {False, XK_F9, spawn, ESHCMD("screenshot --select")},
+
+    // Power
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
     {0, XF86XK_PowerOff, spawn, SHCMD("sysact")},
+
+    // Brightness
     {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 250+")},
     {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 250-")},
     {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
