@@ -1,8 +1,5 @@
 /* See LICENSE file for copyright and license details. */
 
-#define TERMINAL "alacritty"
-#define TERMCLASS "alacritty"
-
 /* appearance */
 static const unsigned int borderpx = 1; // border pixel of windows
 static const unsigned int snap = 32;    // snap pixel
@@ -13,8 +10,12 @@ static unsigned int gappov = 5;         // vert outer gap
 static int smartgaps = 0;               // 1 - no outer gap when only one window
 static const int showbar = 1;           // 0 means no bar
 static const int topbar = 1;            // 0 means bottom bar
-static const char *fonts[] = {"Noto Sans Mono:size=9"};
-static const char dmenufont[] = "Noto Sans Mono:size=9";
+static const char *fonts[] = {
+    "Dejavu Sans Mono for Powerline:size=9",
+    "JoyPixels:size=9:antialias=true:autohint=true",
+    "FontAwesome:size=9:antialias=true:autohint=true",
+};
+static const char dmenufont[] = "Dejavu Sans Mono for Powerline:size=9";
 static const char col_gray1[] = "#1e2127";
 static const char col_gray2[] = "#444444";
 static const char col_gray3[] = "#bbbbbb";
@@ -27,8 +28,9 @@ static const char *colors[][3] = {
 };
 
 /* tagging */
-// static const char *tags[] = {"", "", "", "", "", "", "", "", ""};
-static const char *tags[] = {"", "", "", "", "", "", ""};
+// static const char *tags[] = {"🐧","📺", "", "","","", "", ""};
+static const char *tags[] = {"", "", "", "", "", "", ""};
+// static const char *tags[] = {"🕹", "📰","", "🔍", "💀", "👷",
 
 static const Rule rules[] = {
     /* xprop(1):
@@ -36,8 +38,8 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class      instance    title       tags mask     isfloating   monitor */
-    {"Gimp", NULL, NULL, 0, 1, -1},
-    {"Firefox", NULL, NULL, 1 << 6, 0, -1},
+    {"Thunar", NULL, NULL, 0, 1, -1},
+    {"Firefox", NULL, NULL, 1 << 6, -1},
 };
 
 /* layout(s) */
@@ -47,8 +49,7 @@ static const int resizehints = 1; // 1 - respect size hints in tiled resizals
 
 // #include "vanitygaps.c"
 
-#define FORCE_VSPLIT                                                           \
-  1 /* nrowgrid layout: force two clients to always split vertically */
+#define FORCE_VSPLIT 1 // nrowgrid: force two clients to always split vertically
 #include "vanitygaps.c"
 static const Layout layouts[] = {
     /* symbol     arrange function */
@@ -92,10 +93,12 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] =
     "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = {
+/* static const char *dmenucmd[] = {
     "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
-    "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
+    "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL}; */
+static const char *dmenucmd[] = {"dmenu_run", "-p", "Run: ", NULL};
 static const char *termcmd[] = {"alacritty", NULL};
+static const char *tabtermcmd[] = {"tabbed", "-r 2", "st", "-w", "''", NULL};
 static const char *firefox[] = {"firefox", NULL};
 static const char *filecmd[] = {"thunar", NULL};
 static const char *akcmd[] = {"autokey-gtk", NULL};
@@ -110,6 +113,7 @@ static Key keys[] = {
     {MODKEY, XK_d, spawn, {.v = dmenucmd}},
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
+    {ALTMOD, XK_Return, spawn, {.v = tabtermcmd}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = filecmd}},
     {MODKEY | ShiftMask, XK_x, spawn, {.v = lxcmd}},
     {MODKEY | ShiftMask, XK_a, spawn, {.v = akcmd}},
@@ -163,14 +167,14 @@ static Key keys[] = {
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
 
     // Audio
-    {MODKEY | ControlMask, XK_m, spawn,
-     SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
-    // {MODKEY, XK_minus, spawn,SHCMD("pamixer --allow-boost -d 5; kill -44
-    // $(pidof dwmblocks)")}, {MODKEY | ShiftMask, XK_minus,
-    // spawn,SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
-    // {MODKEY, XK_equal, spawn,SHCMD("pamixer --allow-boost -i 5; kill -44
-    // $(pidof dwmblocks)")}, {MODKEY | ShiftMask, XK_Left, spawn,SHCMD("pamixer
-    // --allow-boost -i 15; kill -44 $(pidof dwmblocks)")},
+    /* {MODKEY, XK_minus, spawn,
+    SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
+    {MODKEY, XK_equal, spawn,
+    SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_minus,
+    spawn,SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
+    {MODKEY | ShiftMask, XK_Left, spawn,
+    SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")}, */
     {0, XF86XK_AudioMute, spawn,
      SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioRaiseVolume, spawn,
@@ -178,10 +182,15 @@ static Key keys[] = {
     {0, XF86XK_AudioLowerVolume, spawn,
      SHCMD("pamixer --allow-boost -d 3; kill -44 $(pidof dwmblocks)")},
 
+    // mpc
+    {0, XF86XK_AudioPrev, spawn, SHCMD("mpc prev")},
+    {0, XF86XK_AudioNext, spawn, SHCMD("mpc next")},
+    {0, XF86XK_AudioPlay, spawn, SHCMD("mpc pause")},
+
     // Screenshot
-    {MODKEY, XK_F10, spawn, ESHCMD("screenshot --all")},
-    {MODKEY | ControlMask, XK_F10, spawn, ESHCMD("screenshot --focused")},
-    {MODKEY, XK_F9, spawn, ESHCMD("screenshot --select")},
+    {MODKEY, XK_Print, spawn, ESHCMD("screenshot --all")},
+    {MODKEY | ControlMask, XK_Print, spawn, ESHCMD("screenshot --focused")},
+    {0, XK_Print, spawn, ESHCMD("screenshot --select")},
 
     // Power
     {0, XF86XK_Sleep, spawn, ESHCMD("lock-sleep")},
@@ -190,11 +199,27 @@ static Key keys[] = {
     // Brightness
     {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 250+")},
     {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 250-")},
+
     {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
     {0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0")},
-    TAGKEYS(XK_o, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_i, 2) TAGKEYS(XK_4, 3)
-        TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
-            TAGKEYS(XK_9, 8)};
+
+    TAGKEYS(XK_o, 0)
+
+        TAGKEYS(XK_2, 1)
+
+            TAGKEYS(XK_i, 2)
+
+                TAGKEYS(XK_4, 3)
+
+                    TAGKEYS(XK_5, 4)
+
+                        TAGKEYS(XK_6, 5)
+
+                            TAGKEYS(XK_7, 6)
+
+                                TAGKEYS(XK_8, 7)
+
+                                    TAGKEYS(XK_9, 8)};
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
@@ -211,7 +236,7 @@ static Button buttons[] = {
     {ClkStatusText, ShiftMask, Button1, sigdwmblocks, {.i = 6}},
 #endif
     {ClkStatusText, ShiftMask, Button3, spawn,
-     SHCMD(TERMINAL " -e nvim ~/suckless/dwmblocks/config.h")},
+     SHCMD("alacritty -e nvim ~/suckless/dwmblocks/config.h")},
     {ClkClientWin, MODKEY, Button1, movemouse, {0}},
     {ClkClientWin, MODKEY, Button2, defaultgaps, {0}},
     {ClkClientWin, MODKEY, Button3, resizemouse, {0}},
