@@ -38,7 +38,7 @@ static const Rule rules[] = {
      *	WM_NAME(STRING) = title
      */
     /* class      instance    title       tags mask     isfloating   monitor */
-    {"Thunar", NULL, NULL, 0, 1, -1},
+    // {"Thunar", NULL, NULL, 0, 1, -1},
     {"Firefox", NULL, NULL, 1 << 6, -1},
 };
 
@@ -98,12 +98,9 @@ static char dmenumon[2] =
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL}; */
 static const char *dmenucmd[] = {"dmenu_run", "-p", "Run: ", NULL};
 static const char *termcmd[] = {"alacritty", NULL};
-static const char *tabtermcmd[] = {"tabbed", "-r 2", "st", "-w", "''", NULL};
+// static const char *tabtermcmd[] = {"tabbed", "-r 2", "st", "-w", "''", NULL};
 static const char *firefox[] = {"firefox", NULL};
 static const char *filecmd[] = {"thunar", NULL};
-static const char *akcmd[] = {"autokey-gtk", NULL};
-static const char *kpcmd[] = {"keepassxc", NULL};
-static const char *lxcmd[] = {"lxappearance", NULL};
 
 #include "shiftview.c"
 #include <X11/XF86keysym.h>
@@ -113,11 +110,8 @@ static Key keys[] = {
     {MODKEY, XK_d, spawn, {.v = dmenucmd}},
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
-    {ALTMOD, XK_Return, spawn, {.v = tabtermcmd}},
+    // {ALTMOD, XK_Return, spawn, {.v = tabtermcmd}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = filecmd}},
-    {MODKEY | ShiftMask, XK_x, spawn, {.v = lxcmd}},
-    {MODKEY | ShiftMask, XK_a, spawn, {.v = akcmd}},
-    {ShiftMask | ControlMask, XK_F2, spawn, ESHCMD("keepassxc &> /dev/null &")},
     {ALTMOD, XK_Return, zoom, {0}},
     {MODKEY | ShiftMask, XK_b, togglebar, {0}},
     {MODKEY, XK_b, focusstack, {.i = +1}},
@@ -203,23 +197,9 @@ static Key keys[] = {
     {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
     {0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0")},
 
-    TAGKEYS(XK_o, 0)
-
-        TAGKEYS(XK_2, 1)
-
-            TAGKEYS(XK_i, 2)
-
-                TAGKEYS(XK_4, 3)
-
-                    TAGKEYS(XK_5, 4)
-
-                        TAGKEYS(XK_6, 5)
-
-                            TAGKEYS(XK_7, 6)
-
-                                TAGKEYS(XK_8, 7)
-
-                                    TAGKEYS(XK_9, 8)};
+    TAGKEYS(XK_o, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_i, 2) TAGKEYS(XK_4, 3)
+        TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
+            TAGKEYS(XK_9, 8)};
 
 /* button definitions */
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
