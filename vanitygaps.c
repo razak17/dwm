@@ -4,13 +4,13 @@ static void incrgaps(const Arg *arg);
 static void togglegaps(const Arg *arg);
 /* Layouts (delete the ones you do not need) */
 static void bstack(Monitor *m);
-static void bstackhoriz(Monitor *m);
+// static void bstackhoriz(Monitor *m);
 static void centeredmaster(Monitor *m);
 static void centeredfloatingmaster(Monitor *m);
 static void deck(Monitor *m);
 static void dwindle(Monitor *m);
 static void fibonacci(Monitor *m, int s);
-static void grid(Monitor *m);
+// static void grid(Monitor *m);
 static void nrowgrid(Monitor *m);
 static void spiral(Monitor *m);
 static void tile(Monitor *m);
@@ -159,7 +159,7 @@ static void bstack(Monitor *m) {
   }
 }
 
-static void bstackhoriz(Monitor *m) {
+/* static void bstackhoriz(Monitor *m) {
   unsigned int i, n;
   int oh, ov, ih, iv;
   int mx = 0, my = 0, mh = 0, mw = 0;
@@ -200,7 +200,7 @@ static void bstackhoriz(Monitor *m) {
       sy += HEIGHT(c) + ih;
     }
   }
-}
+} */
 
 /*
  * Centred master layout + gaps
@@ -537,6 +537,7 @@ void gaplessgrid(Monitor *m) {
  * Gridmode layout + gaps
  * https://dwm.suckless.org/patches/gridmode/
  */
+/*
 void grid(Monitor *m) {
   unsigned int i, n;
   int cx, cy, cw, ch, cc, cr, chrest, cwrest, cols, rows;
@@ -545,13 +546,13 @@ void grid(Monitor *m) {
 
   getgaps(m, &oh, &ov, &ih, &iv, &n);
 
-  /* grid dimensions */
+  // grid dimensions
   for (rows = 0; rows <= n / 2; rows++)
     if (rows * rows >= n)
       break;
   cols = (rows && (rows - 1) * rows >= n) ? rows - 1 : rows;
 
-  /* window geoms (cell height/width) */
+  // window geoms (cell height/width)
   ch = (m->wh - 2 * oh - ih * (rows - 1)) / (rows ? rows : 1);
   cw = (m->ww - 2 * ov - iv * (cols - 1)) / (cols ? cols : 1);
   chrest = (m->wh - 2 * oh - ih * (rows - 1)) - ch * rows;
@@ -565,6 +566,7 @@ void grid(Monitor *m) {
            ch + (cr < chrest ? 1 : 0) - 2 * c->bw, False);
   }
 }
+*/
 
 /*
  * Horizontal grid layout + gaps

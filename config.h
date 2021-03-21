@@ -55,8 +55,6 @@ static const Layout layouts[] = {
     /* symbol     arrange function */
     {"[]=", tile},   /* first entry is default */
     {"TTT", bstack}, /* Master on top, slaves on bottom */
-    {"===", bstackhoriz},
-    {"HHH", grid},
     {"###", nrowgrid},
 
     {"[@]", spiral},   /* Fibonacci spiral */
@@ -101,58 +99,59 @@ static const char *termcmd[] = {"alacritty", NULL};
 // static const char *tabtermcmd[] = {"tabbed", "-r 2", "st", "-w", "''", NULL};
 static const char *firefox[] = {"firefox", NULL};
 static const char *filecmd[] = {"thunar", NULL};
+static const char *authycmd[] = {"authy", NULL};
 
 #include "shiftview.c"
 #include <X11/XF86keysym.h>
+
+#define CMOD MODKEY | ControlMask
+#define SMOD MODKEY | ShiftMask
+#define AMOD MODKEY | ALTMOD
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
     {MODKEY, XK_d, spawn, {.v = dmenucmd}},
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
-    // {ALTMOD, XK_Return, spawn, {.v = tabtermcmd}},
-    {MODKEY | ShiftMask, XK_Return, spawn, {.v = filecmd}},
-    {ALTMOD, XK_Return, zoom, {0}},
-    {MODKEY | ShiftMask, XK_b, togglebar, {0}},
+    {SMOD, XK_Return, spawn, {.v = filecmd}},
+    {AMOD, XK_l, spawn, {.v = authycmd}},
+    {SMOD, XK_b, togglebar, {0}},
     {MODKEY, XK_b, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
-    {MODKEY | ControlMask, XK_h, incnmaster, {.i = +1}},
-    {MODKEY | ControlMask, XK_v, incnmaster, {.i = -1}},
+    {CMOD, XK_h, incnmaster, {.i = +1}},
+    {CMOD, XK_v, incnmaster, {.i = -1}},
     {MODKEY, XK_h, setmfact, {.f = -0.05}},
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_0, view, {.ui = ~0}},
     {MODKEY, XK_comma, focusmon, {.i = -1}},
     {MODKEY, XK_period, focusmon, {.i = +1}},
     {MODKEY, XK_x, killclient, {0}},
-    {MODKEY | ControlMask, XK_e, quit, {0}},
-    // {MODKEY | ShiftMask, XK_0, tag, {.ui = ~0}},
-    {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
-    {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
+    {CMOD, XK_e, quit, {0}},
+    // {SMOD, XK_0, tag, {.ui = ~0}},
+    {SMOD, XK_comma, tagmon, {.i = -1}},
+    {SMOD, XK_period, tagmon, {.i = +1}},
 
     // Gaps
-    {MODKEY | ControlMask, XK_a, togglegaps, {1}},
-    {MODKEY | ShiftMask, XK_equal, defaultgaps, {0}},
+    {CMOD, XK_a, togglegaps, {1}},
+    {SMOD, XK_equal, defaultgaps, {0}},
     {MODKEY, XK_equal, incrgaps, {.i = +1}},
-    {MODKEY | ControlMask, XK_d, incrgaps, {.i = -1}},
+    {CMOD, XK_d, incrgaps, {.i = -1}},
 
     // Layouts
-    {MODKEY, XK_e, setlayout, {.v = &layouts[0]}},             /* tile */
-    {MODKEY | ShiftMask, XK_e, setlayout, {.v = &layouts[1]}}, /* bstack */
-    {MODKEY, XK_y, setlayout, {.v = &layouts[2]}},             /* spiral */
-    {MODKEY | ShiftMask, XK_y, setlayout, {.v = &layouts[3]}}, /* dwindle */
-    {MODKEY, XK_n, setlayout, {.v = &layouts[4]}},             /* deck */
-    {MODKEY | ShiftMask, XK_n, setlayout, {.v = &layouts[5]}}, /* monocle */
-    {MODKEY, XK_i, setlayout, {.v = &layouts[6]}}, /* centeredmaster */
-    {MODKEY | ShiftMask,
-     XK_i,
-     setlayout,
-     {.v = &layouts[7]}}, // centeredfloatingmaster
-    {MODKEY | ShiftMask, XK_f, setlayout, {.v = &layouts[8]}}, // floating
+    {MODKEY, XK_e, setlayout, {.v = &layouts[0]}}, // tile
+    {SMOD, XK_e, setlayout, {.v = &layouts[1]}},   // bstack
+    {SMOD, XK_u, setlayout, {.v = &layouts[2]}},   // nrowgrid
+    {SMOD, XK_p, setlayout, {.v = &layouts[3]}},   // spiral
+    {MODKEY, XK_q, setlayout, {.v = &layouts[4]}}, // dwindle
+    {SMOD, XK_n, setlayout, {.v = &layouts[5]}},   // deck
+    {MODKEY, XK_y, setlayout, {.v = &layouts[6]}}, // monocle
+    {SMOD, XK_y, setlayout, {.v = &layouts[7]}},   // cmaster
+    {MODKEY, XK_f, setlayout, {.v = &layouts[8]}}, // floating cmaster
     {MODKEY, XK_space, setlayout, {0}},
-    {MODKEY | ShiftMask, XK_space, togglefloating, {0}},
-    {MODKEY | ShiftMask, XK_h, cyclelayout, {.i = -1}},
-    {MODKEY | ShiftMask, XK_l, cyclelayout, {.i = +1}},
-
+    {SMOD, XK_space, togglefloating, {0}},
+    {SMOD, XK_h, cyclelayout, {.i = -1}},
+    {SMOD, XK_l, cyclelayout, {.i = +1}},
+    {ALTMOD, XK_b, spawn, SHCMD("~/.local/bin/dwm/wal")},
     // shiftview
     {ALTMOD | ControlMask, XK_l, shiftview, {.i = 1}},
     {ALTMOD | ControlMask, XK_h, shiftview, {.i = -1}},
@@ -161,14 +160,6 @@ static Key keys[] = {
     {ALTMOD | ControlMask, XK_Delete, spawn, SHCMD("sysact")},
 
     // Audio
-    /* {MODKEY, XK_minus, spawn,
-    SHCMD("pamixer --allow-boost -d 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY, XK_equal, spawn,
-    SHCMD("pamixer --allow-boost -i 5; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_minus,
-    spawn,SHCMD("pamixer --allow-boost -d 15; kill -44 $(pidof dwmblocks)")},
-    {MODKEY | ShiftMask, XK_Left, spawn,
-    SHCMD("pamixer --allow-boost -i 15; kill -44 $(pidof dwmblocks)")}, */
     {0, XF86XK_AudioMute, spawn,
      SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)")},
     {0, XF86XK_AudioRaiseVolume, spawn,
@@ -191,8 +182,8 @@ static Key keys[] = {
     {0, XF86XK_PowerOff, spawn, SHCMD("sysact")},
 
     // Brightness
-    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 250+")},
-    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 250-")},
+    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set 100+")},
+    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 100-")},
 
     {0, XF86XK_TouchpadOff, spawn, SHCMD("synclient TouchpadOff=1")},
     {0, XF86XK_TouchpadOn, spawn, SHCMD("synclient TouchpadOff=0")},
