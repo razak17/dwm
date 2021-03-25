@@ -96,6 +96,7 @@ static char dmenumon[2] =
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL}; */
 static const char *dmenucmd[] = {"dmenu_run", "-p", "Run: ", NULL};
 static const char *termcmd[] = {"alacritty", NULL};
+static const char *urxvtcmd[] = {"urxvt", NULL};
 // static const char *tabtermcmd[] = {"tabbed", "-r 2", "st", "-w", "''", NULL};
 static const char *firefox[] = {"firefox", NULL};
 static const char *filecmd[] = {"thunar", NULL};
@@ -113,6 +114,7 @@ static Key keys[] = {
     {MODKEY, XK_d, spawn, {.v = dmenucmd}},
     {MODKEY, XK_w, spawn, {.v = firefox}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
+    {ALTMOD, XK_Return, spawn, {.v = urxvtcmd}},
     {SMOD, XK_Return, spawn, {.v = filecmd}},
     {AMOD, XK_l, spawn, {.v = authycmd}},
     {SMOD, XK_b, togglebar, {0}},
