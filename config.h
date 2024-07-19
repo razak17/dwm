@@ -4,15 +4,16 @@
 #define TERMINAL "st"
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;       /* border pixel of windows */
 static const unsigned int snap      = 1;       /* snap pixel */
 static unsigned int gappih          = 7;       /* horiz inner gap */
 static unsigned int gappiv          = 7;       /* vert inner gap */
 static unsigned int gappoh          = 9;       /* horiz outer gap */
 static unsigned int gappov          = 9;       /* vert outer gap */
+static const int swallowfloating    = 0;       /* 1 means swallow floating windows by default */
 static int smartgaps                = 0;       /* 1 means no outer gap when there is only one window */
-static const int showbar            = 1;        /* 0 means no bar */
-static const int topbar             = 1;        /* 0 means bottom bar */
+static const int showbar            = 1;       /* 0 means no bar */
+static const int topbar             = 1;       /* 0 means bottom bar */
 static const Bool viewontag  = True;
 static const char *fonts[]    = {
     "Cascadia Mono:size=9",
@@ -45,9 +46,29 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+    /* class         instance         title             tags mask     isfloating  isterminal  noswallow monitor */
+    { "autokey",            NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "Gimp",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "Thunderbird",        NULL,            NULL,             1 << 1,       0,           0,         0,        -1 },
+    { "discord",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "Genymotion",         NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "DBeaver",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "Thunar",             NULL,            NULL,             1 << 3,       0,           0,         0,        -1 },
+    { "Slack",              NULL,            NULL,             1 << 3,       0,           0,         0,        -1 },
+    { "obsidian",           NULL,            NULL,             1 << 3,       0,           0,         0,        -1 },
+    { "Lutris",             NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "Insomnia",           NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+    { "bruno",              NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+    { "Beekeeper-Studio",   NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "Brave",              NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Thorium",            NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Mercury",            NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "firefox",            NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "floorp",             NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { NULL,                 NULL,            "Event Tester",   0,            0,           0,         1,        -1 },
+    { NULL,                 "spterm",        NULL,             SPTAG(0),     1,           1,         0,        -1 },
+    { NULL,                 "spcalc",        NULL,             SPTAG(1),     1,           1,         0,        -1 },
+    { NULL,                 "obsidian-open", NULL,             SPTAG(2),     1,           1,         0,        -1 },
 };
 
 /* layout(s) */
@@ -136,7 +157,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-    // Power Menu TODO: figure out why renew is not working
+    // Power Menu
     { CMOD,                         XK_l,                      spawn,    ESHCMD("sysact") },
     // Shiftview
     { MODKEY,                       XK_n,      shiftview,      {.i = 1} },
@@ -158,6 +179,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_apostrophe,  togglescratch,  {.ui = 0 } },
     { MODKEY,                       XK_m,           togglescratch,  {.ui = 1 } },
     { MODKEY,                       XK_semicolon,   togglescratch,  {.ui = 2 } },
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
