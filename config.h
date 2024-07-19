@@ -2,9 +2,15 @@
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int snap      = 1;       /* snap pixel */
+static unsigned int gappih          = 7;       /* horiz inner gap */
+static unsigned int gappiv          = 7;       /* vert inner gap */
+static unsigned int gappoh          = 9;       /* horiz outer gap */
+static unsigned int gappov          = 9;       /* vert outer gap */
+static int smartgaps                = 0;       /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const Bool viewontag  = True;
 static const char *fonts[]    = {
     "Cascadia Mono:size=9",
     "Noto Color Emoji:pixelsize=11:antialias=true:autohint=true",
@@ -33,11 +39,23 @@ static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
+#define FORCE_VSPLIT 1 // nrowgrid: force two clients to always split vertically
+#include "vanitygaps.c"
 static const Layout layouts[] = {
-	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+    /* symbol   arrange function */
+    {"[]=",     tile},                   /* first entry is default */
+    {"TTT",     bstack},                 /* Master on top, slaves on bottom */
+    {"===",     bstackhoriz},
+    {"HHH",     grid},                   /* Master on top, slaves on bottom */
+    {"###",     nrowgrid},
+    {"[@]",     spiral},                 /* Fibonacci spiral */
+    {"[\\]",    dwindle},                /* Decreasing in size right and leftward */
+    {"[D]",     deck},                   /* Master on left, slaves in monocle-like mode on right */
+    {"[M]",     monocle},                /* All windows on top of eachother */
+    {"|M|",     centeredmaster},         /* Master in middle, slaves on sides */
+    {">M>",     centeredfloatingmaster}, /* Same as above but master floats */
+    {"><>",     NULL},                   /* no layout function means floating behavior */
+    {NULL,      NULL},
 };
 
 /* key definitions */
@@ -47,8 +65,8 @@ static const Layout layouts[] = {
 #define SMOD MODKEY | ShiftMask
 #define AMOD MODKEY | ALTMOD
 
-#define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+#define TAGKEYS(KEY,TAG)                                                        \
+    { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
     { ControlMask|ALTMOD,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
     { ALTMOD,                       KEY,      tag,            {.ui = 1 << TAG} }, \
     { MODKEY|ALTMOD,                KEY,      toggletag,      {.ui = 1 << TAG} },
@@ -106,6 +124,11 @@ static const Key keys[] = {
     // Shiftview
     { MODKEY,                       XK_n,      shiftview,      {.i = 1} },
     { MODKEY,                       XK_p,      shiftview,      {.i = -1} },
+    // Vanitygaps
+    { CMOD,                         XK_t,     togglegaps,     {1} },
+    { CMOD,                         XK_d,     defaultgaps,    {0} },
+    { CMOD,                         XK_j,     incrgaps,       {.i = +1} },
+    { CMOD,                         XK_k,     incrgaps,       {.i = -1} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
