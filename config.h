@@ -1,5 +1,8 @@
 /* See LICENSE file for copyright and license details. */
 
+// Constants
+#define TERMINAL "st"
+
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 1;       /* snap pixel */
@@ -19,6 +22,20 @@ static const char *fonts[]    = {
 static const char dmenufont[] = "Operator Mono Lig Book:size=9";
 
 #include "/home/razak/.cache/wal/colors-wal-dwm.h"
+
+typedef struct {
+  const char *name;
+  const void *cmd;
+} Sp;
+const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "82x34", NULL };
+const char *spcmd2[] = {TERMINAL, "-n", "spcalc", "-f", "Cascadia Mono:size=14", "-g", "50x20", "-e", "bc", "-lq", NULL };
+const char *spcmd3[]   = {TERMINAL, "-n", "obsidian-open", "-g", "84x38", "-e", "obsidian-open", NULL };
+static Sp scratchpads[] = {
+  /* name          cmd  */
+  {"spterm",      spcmd1},
+  {"spcalc",      spcmd2},
+  {"spnotes",     spcmd3},
+};
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -137,6 +154,10 @@ static const Key keys[] = {
     // Move stack
     { MODKEY|ShiftMask,             XK_n,    movestack,      {.i = +1 } },
     { MODKEY|ShiftMask,             XK_k,    movestack,      {.i = -1 } },
+    // Scrapads
+    { MODKEY,                       XK_apostrophe,  togglescratch,  {.ui = 0 } },
+    { MODKEY,                       XK_m,           togglescratch,  {.ui = 1 } },
+    { MODKEY,                       XK_semicolon,   togglescratch,  {.ui = 2 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
