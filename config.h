@@ -76,6 +76,7 @@ static const char *mailcmd[]   = { "thunderbird", NULL };
 static const char *emojimenu[] = { "dmenuemoji", NULL };
 
 #include <X11/XF86keysym.h>
+#include "shiftview.c"
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -110,6 +111,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
     // Power Menu TODO: figure out why renew is not working
     { CMOD,                         XK_l,                      spawn,    ESHCMD("sysact") },
+    // Shiftview
+    { MODKEY,                       XK_n,      shiftview,      {.i = 1} },
+    { MODKEY,                       XK_p,      shiftview,      {.i = -1} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
