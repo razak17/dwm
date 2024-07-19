@@ -179,6 +179,35 @@ static const Key keys[] = {
     { MODKEY,                       XK_apostrophe,  togglescratch,  {.ui = 0 } },
     { MODKEY,                       XK_m,           togglescratch,  {.ui = 1 } },
     { MODKEY,                       XK_semicolon,   togglescratch,  {.ui = 2 } },
+    // Audio
+    { 0,                            XF86XK_AudioMute,          spawn,    SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
+    { CMOD,                         XK_m,                      spawn,    SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioRaiseVolume,   spawn,    SHCMD("pamixer --allow-boost -i 2; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioLowerVolume,   spawn,    SHCMD("pamixer --allow-boost -d 2; kill -44 $(pidof dwmblocks)") },
+    { CMOD,                         XK_n,                      spawn,    SHCMD("pamixer --allow-boost -i 2; kill -44 $(pidof dwmblocks)") },
+    { CMOD,                         XK_p,                      spawn,    SHCMD("pamixer --allow-boost -d 2; kill -44 $(pidof dwmblocks)") },
+    // Screenshot
+    { MODKEY,                       XK_Print,                  spawn,    ESHCMD("screenshot --all")},
+    { CMOD,                         XK_Print,                  spawn,    ESHCMD("screenshot --focused")},
+    { 0,                            XK_Print,                  spawn,    ESHCMD("screenshot --select")},
+    // Clipboard
+    { MODKEY,                       XK_b,                      spawn,    ESHCMD("bm")},
+    { ControlMask,                  XK_grave,                  spawn,    ESHCMD("pick_clip_history -l")},
+    { ControlMask | ShiftMask,      XK_grave,                  spawn,    ESHCMD("pick_clip_history -s")},
+    // Power
+    { 0,                            XF86XK_Sleep,              spawn,    ESHCMD("lock-sleep")},
+    { 0,                            XF86XK_PowerOff,           spawn,    SHCMD("sysact")},
+    // Brightness
+    { SMOD,                         XK_equal,                  spawn,    SHCMD("brightnessctl set 1000") },
+    { 0,                            XF86XK_MonBrightnessDown,  spawn,    SHCMD("brightnessctl set 5-") },
+    { 0,                            XF86XK_MonBrightnessUp,    spawn,    SHCMD("brightnessctl set 5+") },
+    { SMOD,                         XK_j,                      spawn,    SHCMD("brightnessctl set 5-") },
+    { SMOD,                         XK_k,                      spawn,    SHCMD("brightnessctl set 5+") },
+    { 0,                            XF86XK_TouchpadOff,        spawn,    SHCMD("synclient TouchpadOff=1") },
+    { 0,                            XF86XK_TouchpadOn,         spawn,    SHCMD("synclient TouchpadOff=0") },
+    // Utils
+    { ALTMOD | ControlMask,         XK_Delete,                 spawn,    ESHCMD("sysact") },
+    { CMOD,                         XK_l,                      spawn,    ESHCMD("sysact") },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
