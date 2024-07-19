@@ -130,6 +130,9 @@ static const Key keys[] = {
     { CMOD,                         XK_k,     incrgaps,       {.i = -1} },
     // Actualfullscreen
     { MODKEY,                       XK_f,     togglefullscr,  {0} },
+    // Cyclelayout
+    { SMOD,                         XK_h,     cyclelayout,    {.i = -1} },
+    { SMOD,                         XK_l,     cyclelayout,    {.i = +1} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
