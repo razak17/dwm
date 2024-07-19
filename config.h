@@ -87,6 +87,7 @@ static const char *emojimenu[] = { "dmenuemoji", NULL };
 
 #include <X11/XF86keysym.h>
 #include "shiftview.c"
+#include "movestack.c"
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -133,6 +134,9 @@ static const Key keys[] = {
     // Cyclelayout
     { SMOD,                         XK_h,     cyclelayout,    {.i = -1} },
     { SMOD,                         XK_l,     cyclelayout,    {.i = +1} },
+    // Move stack
+    { MODKEY|ShiftMask,             XK_n,    movestack,      {.i = +1 } },
+    { MODKEY|ShiftMask,             XK_k,    movestack,      {.i = -1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
