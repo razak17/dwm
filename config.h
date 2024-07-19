@@ -233,6 +233,7 @@ static const Button buttons[] = {
         {ClkStatusText,      0,             Button5,       sigdwmblocks, {.i = 5} },
         {ClkStatusText,      ShiftMask,     Button1,       sigdwmblocks, {.i = 6} },
     #endif
+    {ClkStatusText,         ShiftMask,     Button3,        spawn,          SHCMD(TERMINAL " -e rvim ~/.dots/suckless/dwmblocks/config.h")},
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
