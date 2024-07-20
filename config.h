@@ -2,6 +2,7 @@
 
 // Constants
 #define TERMINAL "st"
+#define TERMCLASS "St"
 
 /* appearance */
 static const unsigned int borderpx  = 1;       /* border pixel of windows */
@@ -51,29 +52,33 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-    /* class         instance         title             tags mask     isfloating  isterminal  noswallow monitor */
+    /* class                instance         title             tags mask     isfloating  isterminal  noswallow monitor */
     { "autokey",            NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
     { "Gimp",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
     { "Thunderbird",        NULL,            NULL,             1 << 1,       0,           0,         0,        -1 },
+    { "DBeaver",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
     { "discord",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
     { "Genymotion",         NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "DBeaver",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "Thunar",             NULL,            NULL,             1 << 3,       0,           0,         0,        -1 },
-    { "Slack",              NULL,            NULL,             1 << 3,       0,           0,         0,        -1 },
-    { "obsidian",           NULL,            NULL,             1 << 3,       0,           0,         0,        -1 },
-    { "Lutris",             NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "Insomnia",           NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
     { "bruno",              NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
-    { "Beekeeper-Studio",   NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "Brave",              NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "Thorium",            NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "Mercury",            NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "firefox",            NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "floorp",             NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { NULL,                 NULL,            "Event Tester",   0,            0,           0,         1,        -1 },
-    { NULL,                 "spterm",        NULL,             SPTAG(0),     1,           1,         0,        -1 },
-    { NULL,                 "spcalc",        NULL,             SPTAG(1),     1,           1,         0,        -1 },
-    { NULL,                 "obsidian-open", NULL,             SPTAG(2),     1,           1,         0,        -1 },
+    { "Beekeeper-Studio",   NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Insomnia",           NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+	{ "mpv",                NULL,            NULL,       	   1 << 5,       0,           1,         0,        -1 },
+    { "Lutris",             NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Thunar",             NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Slack",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "obsidian",           NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Brave",              NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Thorium",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Mercury",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "firefox",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "floorp",             NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { TERMCLASS,            NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
+    { TERMCLASS,            "spterm",        NULL,           SPTAG(0),       1,           1,         0,        -1 },
+    { TERMCLASS,            "spcalc",        NULL,           SPTAG(1),       1,           1,         0,        -1 },
+    { TERMCLASS,            "obsidian-open", NULL,           SPTAG(2),       1,           1,         0,        -1 },
+	{ TERMCLASS,            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
+	{ "kitty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
+	{ "Alacritty",          NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 };
 
 /* layout(s) */
