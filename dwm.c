@@ -1435,9 +1435,9 @@ monocle(Monitor *m)
   Client *c;
 
   getgaps(m, &oh, &ov, &ih, &iv, &n);
-	for (c = m->clients; c; c = c->next)
-		if (ISVISIBLE(c))
-			n++;
+	// for (c = m->clients; c; c = c->next)
+	// 	if (ISVISIBLE(c))
+	// 		n++;
   if (n > 0) /* override layout symbol */
     snprintf(m->ltsymbol, sizeof m->ltsymbol, "[%d]", n);
   for (c = nexttiled(m->clients); c; c = nexttiled(c->next))
