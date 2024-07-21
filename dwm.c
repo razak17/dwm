@@ -599,7 +599,7 @@ buttonpress(XEvent *e)
 
 		} else
 			click = ClkWinTitle;
-	} else if ((c = wintoclient(ev->window))) {,
+	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
 		XAllowEvents(dpy, ReplayPointer, CurrentTime);
