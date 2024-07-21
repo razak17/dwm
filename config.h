@@ -46,7 +46,7 @@ static Sp scratchpads[] = {
 
 /* tagging */
 // static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tags[] = {"💡", "📚", "🐧"," ", "🟢","📺", "📂","🖥️","🌍"};
+static const char *tags[] = {"💡", "📚", "🐧","🐼", "🟢","📺", "📂","🖥️","🌍"};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -63,6 +63,7 @@ static const Rule rules[] = {
     { "bruno",              NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
     { "Beekeeper-Studio",   NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
     { "Insomnia",           NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+	{ "qBittorrent",        NULL,            NULL,       	   1 << 4,       0,           1,         0,        -1 },
 	{ "mpv",                NULL,            NULL,       	   1 << 5,       0,           1,         0,        -1 },
     { "Lutris",             NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
     { "Thunar",             NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
