@@ -126,12 +126,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 // static const char *dmenucmd[]  = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]   = { "kitty", NULL };
-static const char *browsers[]  = { "choose_browser", NULL };
-static const char *filecmd[]   = { "thunar", NULL };
 static const char *dmenucmd[]  = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont};
-static const char *mailcmd[]   = { "thunderbird", NULL };
-static const char *emojimenu[] = { "dmenuemoji", NULL };
 
 #include <X11/XF86keysym.h>
 #include "shiftview.c"
@@ -141,12 +136,12 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
     { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -profiles")},
-    { MODKEY,                       XK_o,      spawn,          {.v = browsers} },
-    { CMOD,                         XK_e,      spawn,          {.v = mailcmd} },
-    { MODKEY,                       XK_e,      spawn,          {.v = filecmd} },
-    { MODKEY,                       XK_Return, spawn,          {.v = termcmd} },
-    { AMOD,                         XK_e,      spawn,          {.v = emojimenu} },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY,                       XK_o,      spawn,          {.v = (const char*[]){ "choose_browser", NULL } } },
+    { CMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
+    { MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "thunar", NULL } } },
+    { MODKEY,                       XK_Return, spawn,          {.v = (const char*[]){ "kitty", NULL } } },
+    { AMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "dmenuemoji", NULL } } },
+	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = (const char*[]){ "st", NULL } } },
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -184,19 +179,28 @@ static const Key keys[] = {
     { SMOD,                         XK_h,     cyclelayout,    {.i = -1} },
     { SMOD,                         XK_l,     cyclelayout,    {.i = +1} },
     // Move stack
-    { MODKEY|ShiftMask,             XK_n,    movestack,      {.i = +1 } },
-    { MODKEY|ShiftMask,             XK_p,    movestack,      {.i = -1 } },
+    { MODKEY|Mod1Mask,              XK_n,    movestack,      {.i = +1 } },
+    { MODKEY|Mod1Mask,              XK_p,    movestack,      {.i = -1 } },
     // Scrapads
     { MODKEY,                       XK_apostrophe,  togglescratch,  {.ui = 0 } },
     { MODKEY,                       XK_m,           togglescratch,  {.ui = 1 } },
     { MODKEY,                       XK_semicolon,   togglescratch,  {.ui = 2 } },
     // Audio
-    { 0,                            XF86XK_AudioMute,          spawn,    SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
-    { CMOD,                         XK_m,                      spawn,    SHCMD("pamixer -t; kill -44 $(pidof dwmblocks)") },
-    { 0,                            XF86XK_AudioRaiseVolume,   spawn,    SHCMD("pamixer --allow-boost -i 2; kill -44 $(pidof dwmblocks)") },
-    { 0,                            XF86XK_AudioLowerVolume,   spawn,    SHCMD("pamixer --allow-boost -d 2; kill -44 $(pidof dwmblocks)") },
-    { CMOD,                         XK_n,                      spawn,    SHCMD("pamixer --allow-boost -i 2; kill -44 $(pidof dwmblocks)") },
-    { CMOD,                         XK_p,                      spawn,    SHCMD("pamixer --allow-boost -d 2; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioMute,          spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
+    { CMOD,                         XK_m,                      spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioRaiseVolume,   spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioLowerVolume,   spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-; kill -44 $(pidof dwmblocks)") },
+    { CMOD,                         XK_n,                      spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+; kill -44 $(pidof dwmblocks)") },
+    { CMOD,                         XK_p,                      spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-; kill -44 $(pidof dwmblocks)") },
+	{ 0,                            XF86XK_AudioPrev,          spawn,    {.v = (const char*[]){ "mpc", "prev", NULL } } },
+	{ 0,                            XF86XK_AudioNext,          spawn,    {.v = (const char*[]){ "mpc",  "next", NULL } } },
+	{ 0,                            XF86XK_AudioPause,         spawn,    {.v = (const char*[]){ "mpc", "pause", NULL } } },
+	{ 0,                            XF86XK_AudioPlay,          spawn,    {.v = (const char*[]){ "mpc", "play", NULL } } },
+	{ 0,                            XF86XK_AudioStop,          spawn,    {.v = (const char*[]){ "mpc", "stop", NULL } } },
+	{ 0,                            XF86XK_AudioRewind,        spawn,    {.v = (const char*[]){ "mpc", "seek", "-10", NULL } } },
+	{ 0,                            XF86XK_AudioForward,       spawn,    {.v = (const char*[]){ "mpc", "seek", "+10", NULL } } },
+	{ 0,                            XF86XK_AudioMedia,         spawn,    {.v = (const char*[]){ TERMINAL, "-e", "ncmpcpp", NULL } } },
+	{ 0,                            XF86XK_AudioMicMute,       spawn,    SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
     // Screenshot
     { MODKEY,                       XK_Print,                  spawn,    SHCMD("screenshot --all")},
     { CMOD,                         XK_Print,                  spawn,    SHCMD("screenshot --focused")},
