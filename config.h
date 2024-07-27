@@ -45,8 +45,8 @@ static Sp scratchpads[] = {
 };
 
 /* tagging */
-// static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tags[] = {"💡", "📚", "🐧","🐼", "🟢","📺", "📂","🖥️","🌍"};
+// static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };📁
+static const char *tags[] = {"💡", "📚", "🐧","🍿", "🐼","📺", "📂","🖥️","🌍"};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -122,7 +122,6 @@ static const Layout layouts[] = {
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
-#define ESHCMD(cmd) SHCMD("exec " cmd)
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -141,7 +140,7 @@ static const char *emojimenu[] = { "dmenuemoji", NULL };
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-    { MODKEY,                       XK_w,      spawn,          ESHCMD("fuj -profiles")},
+    { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -profiles")},
     { MODKEY,                       XK_o,      spawn,          {.v = browsers} },
     { CMOD,                         XK_e,      spawn,          {.v = mailcmd} },
     { MODKEY,                       XK_e,      spawn,          {.v = filecmd} },
@@ -167,7 +166,8 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
     // Power Menu
-    { CMOD,                         XK_l,                      spawn,    ESHCMD("sysact") },
+    { CMOD,                         XK_l,          spawn,          {.v = (const char*[]){ "sysact", NULL } } },
+	{ MODKEY,			            XK_BackSpace,  spawn,          {.v = (const char*[]){ "sysact", NULL } } },
     // Shiftview
     { MODKEY,                       XK_n,      shiftview,      {.i = 1} },
     { MODKEY,                       XK_p,      shiftview,      {.i = -1} },
@@ -198,15 +198,15 @@ static const Key keys[] = {
     { CMOD,                         XK_n,                      spawn,    SHCMD("pamixer --allow-boost -i 2; kill -44 $(pidof dwmblocks)") },
     { CMOD,                         XK_p,                      spawn,    SHCMD("pamixer --allow-boost -d 2; kill -44 $(pidof dwmblocks)") },
     // Screenshot
-    { MODKEY,                       XK_Print,                  spawn,    ESHCMD("screenshot --all")},
-    { CMOD,                         XK_Print,                  spawn,    ESHCMD("screenshot --focused")},
-    { 0,                            XK_Print,                  spawn,    ESHCMD("screenshot --select")},
+    { MODKEY,                       XK_Print,                  spawn,    SHCMD("screenshot --all")},
+    { CMOD,                         XK_Print,                  spawn,    SHCMD("screenshot --focused")},
+    { 0,                            XK_Print,                  spawn,    SHCMD("screenshot --select")},
     // Clipboard
-    { MODKEY,                       XK_b,                      spawn,    ESHCMD("bm")},
-    { ControlMask,                  XK_grave,                  spawn,    ESHCMD("pick_clip_history -l")},
-    { ControlMask | ShiftMask,      XK_grave,                  spawn,    ESHCMD("pick_clip_history -s")},
+    { MODKEY,                       XK_b,                      spawn,    SHCMD("bm")},
+    { ControlMask,                  XK_grave,                  spawn,    SHCMD("pick_clip_history -l")},
+    { ControlMask | ShiftMask,      XK_grave,                  spawn,    SHCMD("pick_clip_history -s")},
     // Power
-    { 0,                            XF86XK_Sleep,              spawn,    ESHCMD("lock-sleep")},
+    { 0,                            XF86XK_Sleep,              spawn,    SHCMD("lock-sleep")},
     { 0,                            XF86XK_PowerOff,           spawn,    SHCMD("sysact")},
     // Brightness
     { SMOD,                         XK_equal,                  spawn,    SHCMD("brightnessctl set 1000") },
@@ -217,8 +217,8 @@ static const Key keys[] = {
     { 0,                            XF86XK_TouchpadOff,        spawn,    SHCMD("synclient TouchpadOff=1") },
     { 0,                            XF86XK_TouchpadOn,         spawn,    SHCMD("synclient TouchpadOff=0") },
     // Utils
-    { ALTMOD | ControlMask,         XK_Delete,                 spawn,    ESHCMD("sysact") },
-    { CMOD,                         XK_l,                      spawn,    ESHCMD("sysact") },
+    { ALTMOD | ControlMask,         XK_Delete,                 spawn,    SHCMD("sysact") },
+    { CMOD,                         XK_l,                      spawn,    SHCMD("sysact") },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
