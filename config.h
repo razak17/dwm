@@ -161,8 +161,9 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
     // Power Menu
-    { CMOD,                         XK_l,          spawn,          {.v = (const char*[]){ "sysact", NULL } } },
-	{ MODKEY,			            XK_BackSpace,  spawn,          {.v = (const char*[]){ "sysact", NULL } } },
+    { CMOD,                         XK_l,          spawn,      {.v = (const char*[]){ "sysact", NULL } } },
+	{ MODKEY,			            XK_BackSpace,  spawn,      {.v = (const char*[]){ "sysact", NULL } } },
+    { ALTMOD | ControlMask,         XK_Delete,     spawn,      {.v = (const char*[]){ "sysact", NULL } } },
     // Shiftview
     { MODKEY,                       XK_n,      shiftview,      {.i = 1} },
     { MODKEY,                       XK_p,      shiftview,      {.i = -1} },
@@ -220,9 +221,6 @@ static const Key keys[] = {
     { SMOD,                         XK_k,                      spawn,    SHCMD("brightnessctl set 5+") },
     { 0,                            XF86XK_TouchpadOff,        spawn,    SHCMD("synclient TouchpadOff=1") },
     { 0,                            XF86XK_TouchpadOn,         spawn,    SHCMD("synclient TouchpadOff=0") },
-    // Utils
-    { ALTMOD | ControlMask,         XK_Delete,                 spawn,    SHCMD("sysact") },
-    { CMOD,                         XK_l,                      spawn,    SHCMD("sysact") },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
