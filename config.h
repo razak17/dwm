@@ -75,6 +75,7 @@ static const Rule rules[] = {
     { "Mercury",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { "firefox",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { "floorp",             NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Zen Browser",        NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { TERMCLASS,            NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
     { TERMCLASS,            "spterm",        NULL,           SPTAG(0),       1,           1,         0,        -1 },
     { TERMCLASS,            "spcalc",        NULL,           SPTAG(1),       1,           1,         0,        -1 },
@@ -137,6 +138,7 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
     { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -profiles")},
+    { MODKEY,                       XK_i,      spawn,          SHCMD("fuj -zen-profiles")},
     { MODKEY,                       XK_o,      spawn,          {.v = (const char*[]){ "choose_browser", NULL } } },
     { CMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
     { MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "thunar", NULL } } },
