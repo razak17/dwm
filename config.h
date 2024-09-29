@@ -137,8 +137,8 @@ static const char *dmenucmd[]  = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-    { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -profiles")},
-    { MODKEY,                       XK_i,      spawn,          SHCMD("fuj -zen-profiles")},
+    { MODKEY,                       XK_i,      spawn,          SHCMD("fuj -profiles")},
+    { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -zen-profiles")},
     { MODKEY,                       XK_o,      spawn,          {.v = (const char*[]){ "choose_browser", NULL } } },
     { CMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
     { MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "thunar", NULL } } },
