@@ -67,6 +67,7 @@ static const Rule rules[] = {
 	{ "qBittorrent",        NULL,            NULL,       	   1 << 4,       0,           1,         0,        -1 },
 	{ "mpv",                NULL,            NULL,       	   1 << 5,       0,           1,         0,        -1 },
     { "Lutris",             NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "MongoDB Compass",    NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
     { "Thunar",             NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
     { "Slack",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
     { "obsidian",           NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
