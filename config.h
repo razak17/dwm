@@ -140,6 +140,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_i,      spawn,          SHCMD("fuj -profiles")},
     { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -zen-profiles")},
     { MODKEY,                       XK_o,      spawn,          {.v = (const char*[]){ "choose_browser", NULL } } },
+    { MODKEY,                       XK_t,      spawn,          {.v = (const char*[]){ "choose_term", NULL } } },
     { CMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
     { MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "thunar", NULL } } },
     { MODKEY,                       XK_Return, spawn,          {.v = (const char*[]){ "kitty", NULL } } },
