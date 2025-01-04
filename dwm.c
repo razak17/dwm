@@ -361,44 +361,53 @@ struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 void
 applyrules(Client *c)
 {
-	const char *class, *instance;
-	unsigned int i;
-	const Rule *r;
-	Monitor *m;
-	XClassHint ch = { NULL, NULL };
+    const char *class, *instance;
+    unsigned int i;
+    const Rule *r;
+    Monitor *m;
+    XClassHint ch = { NULL, NULL };
 
 	/* rule matching */
-	c->isfloating = 0;
-	c->tags = 0;
-	XGetClassHint(dpy, c->win, &ch);
-	class    = ch.res_class ? ch.res_class : broken;
-	instance = ch.res_name  ? ch.res_name  : broken;
+    c->isfloating = 0;
+    c->tags = 0;
+    XGetClassHint(dpy, c->win, &ch);
+    class    = ch.res_class ? ch.res_class : broken;
+    instance = ch.res_name  ? ch.res_name  : broken;
 
-	for (i = 0; i < LENGTH(rules); i++) {
-		r = &rules[i];
-		if ((!r->title || strstr(c->name, r->title))
-		&& (!r->class || strstr(class, r->class))
-		&& (!r->instance || strstr(instance, r->instance)))
-		{
-			c->isterminal = r->isterminal;
-			c->noswallow  = r->noswallow;
-			c->isfloating = r->isfloating;
-			c->tags |= r->tags;
-			if ((r->tags & SPTAGMASK) && r->isfloating) {
-				c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
-				c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
-			}
+    // Check if the client matches any of the scratchpads' tags
+    if (c->tags & SPTAGMASK) {
+        // Set floating for scratchpad
+        c->isfloating = 1;
+        // Center in the monitor if desired
+        c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
+        c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
+    }
 
-			for (m = mons; m && m->num != r->monitor; m = m->next);
-			if (m)
-				c->mon = m;
-		}
-	}
-	if (ch.res_class)
-		XFree(ch.res_class);
-	if (ch.res_name)
-		XFree(ch.res_name);
-	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : (c->mon->tagset[c->mon->seltags] & ~SPTAGMASK);
+    for (i = 0; i < LENGTH(rules); i++) {
+        r = &rules[i];
+        if ((!r->title || strstr(c->name, r->title)) &&
+            (!r->class || strstr(class, r->class)) &&
+            (!r->instance || strstr(instance, r->instance))) {
+
+            c->isterminal = r->isterminal;
+            c->noswallow  = r->noswallow;
+            c->isfloating = r->isfloating || (c->tags & SPTAGMASK);
+            c->tags |= r->tags;
+            if ((r->tags & SPTAGMASK) && r->isfloating) {
+                c->x = c->mon->wx + (c->mon->ww / 2 - WIDTH(c) / 2);
+                c->y = c->mon->wy + (c->mon->wh / 2 - HEIGHT(c) / 2);
+            }
+
+            for (m = mons; m && m->num != r->monitor; m = m->next);
+            if (m)
+                c->mon = m;
+        }
+    }
+    if (ch.res_class)
+        XFree(ch.res_class);
+    if (ch.res_name)
+        XFree(ch.res_name);
+    c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : (c->mon->tagset[c->mon->seltags] & ~SPTAGMASK);
 }
 
 int
@@ -536,20 +545,20 @@ swallow(Client *p, Client *c)
 void
 unswallow(Client *c)
 {
-	c->win = c->swallowing->win;
+  c->win = c->swallowing->win;
 
-	free(c->swallowing);
-	c->swallowing = NULL;
+  free(c->swallowing);
+  c->swallowing = NULL;
 
-	/* unfullscreen the client */
-	setfullscreen(c, 0);
-	updatetitle(c);
-	arrange(c->mon);
-	XMapWindow(dpy, c->win);
-	XMoveResizeWindow(dpy, c->win, c->x, c->y, c->w, c->h);
-	setclientstate(c, NormalState);
-	focus(NULL);
-	arrange(c->mon);
+  /* unfullscreen the client */
+  setfullscreen(c, 0);
+  updatetitle(c);
+  arrange(c->mon);
+  XMapWindow(dpy, c->win);
+  XMoveResizeWindow(dpy, c->win, c->x, c->y, c->w, c->h);
+  setclientstate(c, NormalState);
+  focus(NULL);
+  arrange(c->mon);
 }
 
 void
@@ -1062,26 +1071,26 @@ expose(XEvent *e)
 void
 focus(Client *c)
 {
-	if (!c || !ISVISIBLE(c))
+  if (!c || !ISVISIBLE(c))
 		for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
-	if (selmon->sel && selmon->sel != c)
-		unfocus(selmon->sel, 0);
-	if (c) {
-		if (c->mon != selmon)
-			selmon = c->mon;
-		if (c->isurgent)
-			seturgent(c, 0);
-		detachstack(c);
-		attachstack(c);
-		grabbuttons(c, 1);
-		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
-		setfocus(c);
-	} else {
-		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
-		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
-	}
-	selmon->sel = c;
-	drawbars();
+  if (selmon->sel && selmon->sel != c)
+    unfocus(selmon->sel, 0);
+  if (c) {
+    if (c->mon != selmon)
+      selmon = c->mon;
+    if (c->isurgent)
+      seturgent(c, 0);
+    detachstack(c);
+    attachstack(c);
+    grabbuttons(c, 1);
+    XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+    setfocus(c);
+  } else {
+    XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+    XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
+  }
+  selmon->sel = c;
+  drawbars();
 }
 
 /* there are some broken focus acquiring clients needing extra handling */
@@ -2176,27 +2185,27 @@ togglefullscr(const Arg *arg)
 void
 togglescratch(const Arg *arg)
 {
-	Client *c;
-	unsigned int found = 0;
-	unsigned int scratchtag = SPTAG(arg->ui);
-	Arg sparg = {.v = scratchpads[arg->ui].cmd};
+    Client *c;
+    unsigned int found = 0;
+    unsigned int scratchtag = SPTAG(arg->ui);
+    Arg sparg = {.v = scratchpads[arg->ui].cmd};
 
-	for (c = selmon->clients; c && !(found = c->tags & scratchtag); c = c->next);
-	if (found) {
-		unsigned int newtagset = selmon->tagset[selmon->seltags] ^ scratchtag;
-		if (newtagset) {
-			selmon->tagset[selmon->seltags] = newtagset;
-			focus(NULL);
-			arrange(selmon);
-		}
-		if (ISVISIBLE(c)) {
-			focus(c);
-			restack(selmon);
-		}
-	} else {
-		selmon->tagset[selmon->seltags] |= scratchtag;
-		spawn(&sparg);
-	}
+    for (c = selmon->clients; c && !(found = c->tags & scratchtag); c = c->next);
+    if (found) {
+            unsigned int newtagset = selmon->tagset[selmon->seltags] ^ scratchtag;
+            if (newtagset) {
+                selmon->tagset[selmon->seltags] = newtagset;
+                focus(NULL);
+                arrange(selmon);
+            }
+            if (ISVISIBLE(c)) {
+                focus(c);
+                restack(selmon);
+            }
+    } else {
+        selmon->tagset[selmon->seltags] |= scratchtag;
+        spawn(&sparg);
+    }
 }
 
 void
