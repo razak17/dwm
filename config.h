@@ -84,6 +84,7 @@ static const Rule rules[] = {
     { TERMCLASS,            "obsidian-open", NULL,           SPTAG(2),       1,           1,         0,        -1 },
 	{ TERMCLASS,            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 	{ "kitty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
+	{ "ghostty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 	{ "Alacritty",          NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 };
 
@@ -145,7 +146,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_t,      spawn,          {.v = (const char*[]){ "choose_term", NULL } } },
     { CMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
     { MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "thunar", NULL } } },
-    { MODKEY,                       XK_Return, spawn,          {.v = (const char*[]){ "kitty", NULL } } },
+    { MODKEY,                       XK_Return, spawn,          {.v = (const char*[]){ "ghostty", NULL } } },
     { AMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "dmenuemoji", NULL } } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = (const char*[]){ "st", NULL } } },
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
