@@ -77,6 +77,7 @@ static const Rule rules[] = {
     { "Mercury",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { "firefox",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { "floorp",             NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "waterfox",           NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { "zen",                NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { TERMCLASS,            NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
     { TERMCLASS,            "spterm",        NULL,           SPTAG(0),       1,           1,         0,        -1 },
