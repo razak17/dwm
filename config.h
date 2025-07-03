@@ -85,7 +85,7 @@ static const Rule rules[] = {
     { TERMCLASS,            "obsidian-open", NULL,           SPTAG(2),       1,           1,         0,        -1 },
 	{ TERMCLASS,            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 	{ "kitty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
-	{ "ghostty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
+	{ "ghostty",            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 	{ "Alacritty",          NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 };
 
