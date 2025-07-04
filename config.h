@@ -30,20 +30,6 @@ static const char dmenufont[] = "Operator Mono Lig Book:size=9";
 
 #include "/home/razak/.cache/wal/colors-wal-dwm.h"
 
-typedef struct {
-  const char *name;
-  const void *cmd;
-} Sp;
-const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "82x34", NULL };
-const char *spcmd2[] = {TERMINAL, "-n", "spcalc", "-f", "Cascadia Mono:size=14", "-g", "50x20", "-e", "bc", "-lq", NULL };
-const char *spcmd3[]   = {TERMINAL, "-n", "obsidian-open", "-g", "84x38", "-e", "obsidian-open", NULL };
-static Sp scratchpads[] = {
-  /* name          cmd  */
-  {"spterm",      spcmd1},
-  {"spcalc",      spcmd2},
-  {"spnotes",     spcmd3},
-};
-
 /* tagging */
 // static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };📁
 static const char *tags[] = {"💡", "📚", "🐧","🍿", "🐼","📺", "📂","🖥️","🌍"};
@@ -80,9 +66,6 @@ static const Rule rules[] = {
     { "waterfox",           NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { "zen",                NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
     { TERMCLASS,            NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
-    { TERMCLASS,            "spterm",        NULL,           SPTAG(0),       1,           1,         0,        -1 },
-    { TERMCLASS,            "spcalc",        NULL,           SPTAG(1),       1,           1,         0,        -1 },
-    { TERMCLASS,            "obsidian-open", NULL,           SPTAG(2),       1,           1,         0,        -1 },
 	{ TERMCLASS,            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 	{ "kitty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
 	{ "ghostty",            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
@@ -191,10 +174,6 @@ static const Key keys[] = {
     // Move stack
     { MODKEY|Mod1Mask,              XK_n,    movestack,      {.i = +1 } },
     { MODKEY|Mod1Mask,              XK_p,    movestack,      {.i = -1 } },
-    // Scrapads
-    { MODKEY,                       XK_apostrophe,  togglescratch,  {.ui = 0 } },
-    { MODKEY,                       XK_m,           togglescratch,  {.ui = 1 } },
-    { MODKEY,                       XK_semicolon,   togglescratch,  {.ui = 2 } },
     // Audio
     { 0,                            XF86XK_AudioMute,          spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
     { CMOD,                         XK_m,                      spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
