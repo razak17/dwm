@@ -30,6 +30,21 @@ static const char dmenufont[] = "Operator Mono Lig Book:size=9";
 
 #include "/home/razak/.cache/wal/colors-wal-dwm.h"
 
+/* scratchpads */
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {TERMINAL, "-n", "spterm", "-g", "82x34", NULL };
+const char *spcmd2[] = {TERMINAL, "-n", "spcalc", "-f", "Cascadia Mono:size=14", "-g", "50x20", "-e", "bc", "-lq", NULL };
+const char *spcmd3[] = {TERMINAL, "-n", "obsidian-open", "-g", "84x38", "-e", "obsidian-open", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"spterm",      spcmd1},
+	{"spcalc",      spcmd2},
+	{"spnotes",     spcmd3},
+};
+
 /* tagging */
 // static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };📁
 static const char *tags[] = {"💡", "📚", "🐧","🍿", "🐼","📺", "📂","🖥️","🌍"};
@@ -39,37 +54,82 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-    /* class                instance         title             tags mask     isfloating  isterminal  noswallow monitor */
-    { "autokey",            NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
-    { "Gimp",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
-    { "thunderbird",        NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "DBeaver",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "discord",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "Genymotion",         NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
-    { "bruno",              NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
-    { "Beekeeper-Studio",   NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "Insomnia",           NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
-	{ "qBittorrent",        NULL,            NULL,       	   1 << 4,       0,           1,         0,        -1 },
-	{ "mpv",                NULL,            NULL,       	   1 << 5,       0,           1,         0,        -1 },
-    { "Lutris",             NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "MongoDB Compass",    NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
-    { "Thunar",             NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
-    { "LRCGET",             NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
-    { "Nautilus",           NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
-    { "Slack",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
-    { "obsidian",           NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
-    { "Brave",              NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { "Thorium",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { "Mercury",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { "firefox",            NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { "floorp",             NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { "waterfox",           NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { "zen",                NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
-    { TERMCLASS,            NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
-	{ TERMCLASS,            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
-	{ "kitty",              NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
-	{ "ghostty",            NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
-	{ "Alacritty",          NULL,            NULL,       	   1 << 7,       0,           1,         0,        -1 },
+    /* class                   instance         title             tags mask     isfloating  isterminal  noswallow monitor */
+    { "autokey",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "Gimp",                  NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "Anydesk",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "thunderbird",           NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "DBeaver",               NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "discord",               NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "Genymotion",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "bruno",                 NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+    { "Beekeeper-Studio",      NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Insomnia",              NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+    { "qBittorrent",           NULL,            NULL,       	  1 << 4,       0,           1,         0,        -1 },
+    { "mpv",                   NULL,            NULL,       	  1 << 5,       0,           1,         0,        -1 },
+    { "Jellyfin Media Player", NULL,            NULL,       	  1 << 3,       0,           0,         0,        -1 },
+    { "Lutris",                NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "MongoDB Compass",       NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Thunar",                NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "LRCGET",                NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Nautilus",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Slack",                 NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "obsidian",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Brave",                 NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Thorium",               NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Mercury",               NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "firefox",               NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "floorp",                NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "qutebrowser",           NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "waterfox",              NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "zen",                   NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { TERMCLASS,               NULL,            NULL,       	       0,       0,           1,         0,        -1 },
+    { NULL,                    NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
+    { TERMCLASS,               "floatterm",     NULL,       	       0,       1,           1,         0,        -1 },
+    { TERMCLASS,               "bg",            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    { TERMCLASS,               "spterm",        NULL,       	SPTAG(0),       1,           1,         0,        -1 },
+    { TERMCLASS,               "spcalc",        NULL,       	SPTAG(1),       1,           1,         0,        -1 },
+    { "kitty",                 NULL,            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    { "ghostty",               NULL,            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    { "Alacritty",             NULL,            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    /* class                   instance         title             tags mask     isfloating  isterminal  noswallow monitor */
+    { "autokey",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "Gimp",                  NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "Anydesk",               NULL,            NULL,             1 << 0,       0,           0,         0,        -1 },
+    { "thunderbird",           NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "DBeaver",               NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "discord",               NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "Genymotion",            NULL,            NULL,             1 << 2,       0,           0,         0,        -1 },
+    { "bruno",                 NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+    { "Beekeeper-Studio",      NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Insomnia",              NULL,            NULL,             1 << 4,       0,           0,         0,        -1 },
+    { "qBittorrent",           NULL,            NULL,       	  1 << 4,       0,           1,         0,        -1 },
+    { "mpv",                   NULL,            NULL,       	  1 << 5,       0,           1,         0,        -1 },
+    { "Jellyfin Media Player", NULL,            NULL,       	  1 << 3,       0,           0,         0,        -1 },
+    { "Lutris",                NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "MongoDB Compass",       NULL,            NULL,             1 << 5,       0,           0,         0,        -1 },
+    { "Thunar",                NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "LRCGET",                NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Nautilus",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Slack",                 NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "obsidian",              NULL,            NULL,             1 << 6,       0,           0,         0,        -1 },
+    { "Brave",                 NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Thorium",               NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "Mercury",               NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "firefox",               NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "floorp",                NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "qutebrowser",           NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "waterfox",              NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { "zen",                   NULL,            NULL,             1 << 8,       0,           0,         0,        -1 },
+    { TERMCLASS,               NULL,            NULL,       	       0,       0,           1,         0,        -1 },
+    { NULL,                    NULL,            "Event Tester",        0,       0,           0,         1,        -1 },
+    { TERMCLASS,               "floatterm",     NULL,       	       0,       1,           1,         0,        -1 },
+    { TERMCLASS,               "bg",            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    { TERMCLASS,               "spterm",        NULL,       	SPTAG(0),       1,           1,         0,        -1 },
+    { TERMCLASS,               "spcalc",        NULL,       	SPTAG(1),       1,           1,         0,        -1 },
+    { "kitty",                 NULL,            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    { "ghostty",               NULL,            NULL,       	  1 << 7,       0,           1,         0,        -1 },
+    { "Alacritty",             NULL,            NULL,       	  1 << 7,       0,           1,         0,        -1 },
 };
 
 /* layout(s) */
@@ -174,6 +234,13 @@ static const Key keys[] = {
     // Move stack
     { MODKEY|Mod1Mask,              XK_n,    movestack,      {.i = +1 } },
     { MODKEY|Mod1Mask,              XK_p,    movestack,      {.i = -1 } },
+    // Scratchpads
+    { MODKEY,                       XK_apostrophe, togglescratch,   {.ui = 0 } },
+    { MODKEY,                       XK_m,          togglescratch,   {.ui = 1 } },
+    { MODKEY,                       XK_semicolon,  togglescratch,   {.ui = 2 } },
+    // Stuff
+    { MODKEY,			            XK_s,          togglesticky,    {0} },
+    { MODKEY | ShiftMask,           XK_q,          quit,            {0} },
     // Audio
     { 0,                            XF86XK_AudioMute,          spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
     { CMOD,                         XK_m,                      spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
@@ -222,7 +289,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
 /* button definitions */
