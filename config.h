@@ -137,44 +137,50 @@ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 
-#define FORCE_VSPLIT 1 // nrowgrid: force two clients to always split vertically
+static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
+#define FORCE_VSPLIT 1  /* nrowgrid layout: force two clients to always split vertically */
 #include "vanitygaps.c"
+
 static const Layout layouts[] = {
-    /* symbol   arrange function */
-    {"[]=",     tile},                   /* first entry is default */
-    {"TTT",     bstack},                 /* Master on top, slaves on bottom */
+	/* symbol     arrange function */
+	{ "[]=",	tile },	                     /* Default: Master on left, slaves on right */
+	{ "TTT",	bstack },                    /* Master on top, slaves on bottom */
+
     {"===",     bstackhoriz},
-    {"HHH",     grid},                   /* Master on top, slaves on bottom */
-    {"###",     nrowgrid},
-    {"[@]",     spiral},                 /* Fibonacci spiral */
-    {"[\\]",    dwindle},                /* Decreasing in size right and leftward */
-    {"[D]",     deck},                   /* Master on left, slaves in monocle-like mode on right */
-    {"[M]",     monocle},                /* All windows on top of eachother */
-    {"|M|",     centeredmaster},         /* Master in middle, slaves on sides */
-    {">M>",     centeredfloatingmaster}, /* Same as above but master floats */
-    {"><>",     NULL},                   /* no layout function means floating behavior */
-    {NULL,      NULL},
+    {"HHH",     grid},                        /* Master on top, slaves on bottom */
+    {"###",     nrowgrid},                    /* nrowgrid layout + gaps */
+
+	{ "---",   horizgrid },                  /* Horizontal grid layout + gaps */
+	{ ":::",   gaplessgrid },                /* Gappless grid layout + gaps (ironically) */
+
+	{ "[@]",	spiral },                    /* Fibonacci spiral */
+	{ "[\\]",	dwindle },                   /* Decreasing in size right and leftward */
+
+	{ "[D]",	deck },	                     /* Master on left, slaves in monocle-like mode on right */
+	{ "[M]",	monocle },                   /* All windows on top of eachother */
+
+	{ "|M|",	centeredmaster },            /* Master in middle, slaves on sides */
+	{ ">M>",	centeredfloatingmaster },    /* Same but master floats */
+
+	{ "><>",	NULL },	                     /* no layout function means floating behavior */
+	{ NULL,		NULL },
 };
 
 /* key definitions */
 #define MODKEY Mod4Mask
-#define ALTMOD Mod1Mask
-#define CMOD MODKEY | ControlMask
-#define SMOD MODKEY | ShiftMask
-#define AMOD MODKEY | ALTMOD
+#define ALTKEY Mod1Mask
 
 #define TAGKEYS(KEY,TAG)                                                        \
     { MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-    { ControlMask|ALTMOD,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+    { ControlMask | ALTKEY,         KEY,      toggleview,     {.ui = 1 << TAG} }, \
     { MODKEY | ShiftMask,           KEY,      tag,            {.ui = 1 << TAG} }, \
-    { MODKEY|ALTMOD,                KEY,      toggletag,      {.ui = 1 << TAG} },
+    { MODKEY | ALTKEY,              KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-// static const char *dmenucmd[]  = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *dmenucmd[]  = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont};
 
 #include <X11/XF86keysym.h>
@@ -182,58 +188,65 @@ static const char *dmenucmd[]  = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont
 #include "movestack.c"
 
 static const Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-    { MODKEY,                       XK_i,      spawn,          SHCMD("fuj -profiles")},
-    { MODKEY,                       XK_w,      spawn,          SHCMD("fuj -zen-profiles")},
-    { MODKEY,                       XK_o,      spawn,          {.v = (const char*[]){ "choose_browser", NULL } } },
-    { MODKEY,                       XK_t,      spawn,          {.v = (const char*[]){ "choose_term", NULL } } },
-    { CMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "thunderbird", NULL } } },
-    { MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "thunar", NULL } } },
-    { MODKEY,                       XK_Return, spawn,          {.v = (const char*[]){ "ghostty", NULL } } },
-    { AMOD,                         XK_e,      spawn,          {.v = (const char*[]){ "dmenuemoji", NULL } } },
-    { AMOD,                         XK_m,      spawn,          {.v = (const char*[]){ "dmenumusic", NULL } } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = (const char*[]){ "st", NULL } } },
-	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-    { CMOD,                         XK_v,      incnmaster,     {.i = +1 } },
-    { CMOD,                         XK_h,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_z,      zoom,           {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-    { MODKEY,                       XK_x,      killclient,     {0} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	/* modifier                     key            function         argument */
+	{ MODKEY,                       XK_j,          focusstack,      {.i = +1 } },
+	{ MODKEY,                       XK_k,          focusstack,      {.i = -1 } },
+	{ MODKEY,                       XK_d,          spawn,           {.v = dmenucmd } },
+    { MODKEY,                       XK_i,          spawn,           SHCMD("fuj -profiles")},
+    { MODKEY,                       XK_w,          spawn,           SHCMD("fuj -zen-profiles")},
+    { MODKEY,                       XK_o,          spawn,           {.v = (const char*[]){ "choose_browser", NULL } } },
+    { MODKEY,                       XK_t,          spawn,           {.v = (const char*[]){ "choose_term", NULL } } },
+    { MODKEY | ControlMask,         XK_e,          spawn,           {.v = (const char*[]){ "thunderbird", NULL } } },
+    { MODKEY,                       XK_e,          spawn,           {.v = (const char*[]){ "thunar", NULL } } },
+    { MODKEY,                       XK_Return,     spawn,           {.v = (const char*[]){ "ghostty", NULL } } },
+    { MODKEY | ALTKEY,              XK_e,          spawn,           {.v = (const char*[]){ "dmenuemoji", NULL } } },
+    { MODKEY | ALTKEY,              XK_m,          spawn,           {.v = (const char*[]){ "dmenumusic", NULL } } },
+	{ MODKEY | ShiftMask,           XK_Return,     spawn,           {.v = (const char*[]){ "st", NULL } } },
+	{ MODKEY | ShiftMask,           XK_b,          togglebar,       {0} },
+    { MODKEY | ControlMask,         XK_v,          incnmaster,      {.i = +1 } },
+    { MODKEY | ControlMask,         XK_h,          incnmaster,      {.i = -1 } },
+	{ MODKEY,                       XK_h,          setmfact,        {.f = -0.05} },
+	{ MODKEY,                       XK_l,          setmfact,        {.f = +0.05} },
+	{ MODKEY,                       XK_z,          zoom,            {0} },
+	{ MODKEY,                       XK_Tab,        view,            {0} },
+    { MODKEY,                       XK_x,          killclient,      {0} },
+	{ MODKEY,                       XK_space,      setlayout,       {0} },
+	{ MODKEY | ShiftMask,           XK_space,      togglefloating,  {0} },
+	{ MODKEY,                       XK_0,          view,            {.ui = ~0 } },
+	{ MODKEY | ShiftMask,           XK_0,          tag,             {.ui = ~0 } },
+	{ MODKEY,                       XK_comma,      focusmon,        {.i = -1 } },
+	{ MODKEY,                       XK_period,     focusmon,        {.i = +1 } },
+	{ MODKEY | ShiftMask,           XK_comma,      tagmon,          {.i = -1 } },
+	{ MODKEY | ShiftMask,           XK_period,     tagmon,          {.i = +1 } },
     // Power Menu
-    { CMOD,                         XK_l,          spawn,      {.v = (const char*[]){ "sysact", NULL } } },
-	{ MODKEY,			            XK_BackSpace,  spawn,      {.v = (const char*[]){ "sysact", NULL } } },
-    { ALTMOD | ControlMask,         XK_Delete,     spawn,      {.v = (const char*[]){ "sysact", NULL } } },
+    { MODKEY | ControlMask,         XK_l,          spawn,           {.v = (const char*[]){ "sysact", NULL } } },
+    { MODKEY,			            XK_BackSpace,  spawn,           {.v = (const char*[]){ "sysact", NULL } } },
+    { ALTKEY | ControlMask,         XK_Delete,     spawn,           {.v = (const char*[]){ "sysact", NULL } } },
     // Shiftview
-    { MODKEY,                       XK_n,      shiftview,      {.i = 1} },
-    { MODKEY,                       XK_p,      shiftview,      {.i = -1} },
-    // Vanitygaps
-    { CMOD,                         XK_t,     togglegaps,     {1} },
-    { CMOD,                         XK_d,     defaultgaps,    {0} },
-    { CMOD,                         XK_j,     incrgaps,       {.i = +1} },
-    { CMOD,                         XK_k,     incrgaps,       {.i = -1} },
-    { SMOD,                         XK_i,     setlayout,      {.v = &layouts[0]} },
-    { MODKEY,                       XK_y,     setlayout,      {.v = &layouts[8]} },
+    { MODKEY,                       XK_n,          shiftview,       {.i = 1} },
+    { MODKEY,                       XK_p,          shiftview,       {.i = -1} },
+    // Vanitygap
+    { MODKEY | ControlMask,         XK_t,          togglegaps,      {1} },
+    { MODKEY | ControlMask,         XK_d,          defaultgaps,     {0} },
+    { MODKEY | ControlMask,         XK_j,          incrgaps,        {.i = +1} },
+    { MODKEY | ControlMask,         XK_k,          incrgaps,        {.i = -1} },
+    { MODKEY,                       XK_u,          setlayout,       {.v = &layouts[0]} },
+    { MODKEY | ALTKEY,              XK_g,          setlayout,       {.v = &layouts[4] } },
+    { MODKEY | ALTKEY,              XK_h,          setlayout,       {.v = &layouts[6] } },
+    { MODKEY | ALTKEY,              XK_s,          setlayout,       {.v = &layouts[7]} },
+    { MODKEY | ALTKEY,              XK_d,          setlayout,       {.v = &layouts[9] } },
+    { MODKEY | ALTKEY,              XK_u,          setlayout,       {.v = &layouts[10]} },
+    { MODKEY | ALTKEY,              XK_semicolon,  setlayout,       {.v = &layouts[11]} },
+    { MODKEY | ALTKEY,              XK_apostrophe, setlayout,       {.v = &layouts[12]} },
+    { MODKEY | ShiftMask,		    XK_apostrophe, togglesmartgaps, {0} },
     // Actualfullscreen
-    { MODKEY,                       XK_f,     togglefullscr,  {0} },
+    { MODKEY,                       XK_f,          togglefullscr,   {0} },
     // Cyclelayout
-    { SMOD,                         XK_h,     cyclelayout,    {.i = -1} },
-    { SMOD,                         XK_l,     cyclelayout,    {.i = +1} },
+    { MODKEY | ShiftMask,           XK_h,          cyclelayout,     {.i = -1} },
+    { MODKEY | ShiftMask,           XK_l,          cyclelayout,     {.i = +1} },
     // Move stack
-    { MODKEY|Mod1Mask,              XK_n,    movestack,      {.i = +1 } },
-    { MODKEY|Mod1Mask,              XK_p,    movestack,      {.i = -1 } },
+    { MODKEY | ALTKEY,              XK_p,          movestack,       {.i = -1 } },
+    { MODKEY | ALTKEY,              XK_n,          movestack,       {.i = +1 } },
     // Scratchpads
     { MODKEY,                       XK_apostrophe, togglescratch,   {.ui = 0 } },
     { MODKEY,                       XK_m,          togglescratch,   {.ui = 1 } },
@@ -242,43 +255,45 @@ static const Key keys[] = {
     { MODKEY,			            XK_s,          togglesticky,    {0} },
     { MODKEY | ShiftMask,           XK_q,          quit,            {0} },
     // Audio
-    { 0,                            XF86XK_AudioMute,          spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
-    { CMOD,                         XK_m,                      spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
-    { 0,                            XF86XK_AudioRaiseVolume,   spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+; kill -44 $(pidof dwmblocks)") },
-    { 0,                            XF86XK_AudioLowerVolume,   spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-; kill -44 $(pidof dwmblocks)") },
-    { CMOD,                         XK_n,                      spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+; kill -44 $(pidof dwmblocks)") },
-    { CMOD,                         XK_p,                      spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-; kill -44 $(pidof dwmblocks)") },
-	{ 0,                            XF86XK_AudioPrev,          spawn,    {.v = (const char*[]){ "mpc", "prev", NULL } } },
-	{ 0,                            XF86XK_AudioNext,          spawn,    {.v = (const char*[]){ "mpc",  "next", NULL } } },
-	{ 0,                            XF86XK_AudioPause,         spawn,    {.v = (const char*[]){ "mpc", "pause", NULL } } },
-	{ SMOD,                         XK_m,                      spawn,    {.v = (const char*[]){ "mpc", "pause", NULL } } },
-	{ 0,                            XF86XK_AudioPlay,          spawn,    {.v = (const char*[]){ "mpc", "play", NULL } } },
-	{ SMOD,                         XK_p,                      spawn,    {.v = (const char*[]){ "mpc", "play", NULL } } },
-	{ 0,                            XF86XK_AudioStop,          spawn,    {.v = (const char*[]){ "mpc", "stop", NULL } } },
-	{ 0,                            XF86XK_AudioRewind,        spawn,    {.v = (const char*[]){ "mpc", "seek", "-10", NULL } } },
-	{ 0,                            XF86XK_AudioForward,       spawn,    {.v = (const char*[]){ "mpc", "seek", "+10", NULL } } },
-	{ 0,                            XF86XK_AudioMedia,         spawn,    {.v = (const char*[]){ TERMINAL, "-e", "ncmpcpp", NULL } } },
-	{ 0,                            XF86XK_AudioMicMute,       spawn,    SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
+	{ MODKEY | ControlMask,         XK_b,                        spawn,    SHCMD("blueman-manager") },
+    { 0,                            XF86XK_AudioMute,            spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
+    { MODKEY | ControlMask,         XK_m,                        spawn,    SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioRaiseVolume,     spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+; kill -44 $(pidof dwmblocks)") },
+    { 0,                            XF86XK_AudioLowerVolume,     spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-; kill -44 $(pidof dwmblocks)") },
+    { MODKEY | ControlMask,         XK_n,                        spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%- && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+; kill -44 $(pidof dwmblocks)") },
+    { MODKEY | ControlMask,         XK_p,                        spawn,    SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 0%+ && wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-; kill -44 $(pidof dwmblocks)") },
+	{ 0,                            XF86XK_AudioPrev,            spawn,    {.v = (const char*[]){ "mpc", "prev", NULL } } },
+	{ 0,                            XF86XK_AudioNext,            spawn,    {.v = (const char*[]){ "mpc",  "next", NULL } } },
+	{ 0,                            XF86XK_AudioPause,           spawn,    {.v = (const char*[]){ "mpc", "pause", NULL } } },
+	{ MODKEY | ShiftMask,           XK_m,                        spawn,    SHCMD("mpc pause; pauseallmpv") },
+	{ 0,                            XF86XK_AudioPlay,            spawn,    {.v = (const char*[]){ "mpc", "play", NULL } } },
+	{ MODKEY | ShiftMask,           XK_p,                        spawn,    {.v = (const char*[]){ "mpc", "toggle", NULL } } },
+	{ 0,                            XF86XK_AudioStop,            spawn,    {.v = (const char*[]){ "mpc", "stop", NULL } } },
+	{ 0,                            XF86XK_AudioRewind,          spawn,    {.v = (const char*[]){ "mpc", "seek", "-10", NULL } } },
+	{ 0,                            XF86XK_AudioForward,         spawn,    {.v = (const char*[]){ "mpc", "seek", "+10", NULL } } },
+	{ 0,                            XF86XK_AudioMedia,           spawn,    {.v = (const char*[]){ TERMINAL, "-e", "ncmpcpp", NULL } } },
+	{ 0,                            XF86XK_AudioMicMute,         spawn,    SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle") },
     // Screenshot
-    { MODKEY,                       XK_Print,                  spawn,    SHCMD("screenshot --all")},
-    { CMOD,                         XK_Print,                  spawn,    SHCMD("screenshot --focused")},
-    { 0,                            XK_Print,                  spawn,    SHCMD("screenshot --select")},
+    { MODKEY,                       XK_Print,                    spawn,    SHCMD("screenshot --all")},
+    { MODKEY | ControlMask,         XK_Print,                    spawn,    SHCMD("screenshot --focused")},
+    { 0,                            XK_Print,                    spawn,    SHCMD("screenshot --select")},
     // Clipboard
-    { MODKEY,                       XK_b,                      spawn,    SHCMD("bm")},
-    { ControlMask,                  XK_grave,                  spawn,    SHCMD("pick_clip_history -l")},
-    { ControlMask | ShiftMask,      XK_grave,                  spawn,    SHCMD("pick_clip_history -s")},
-    { CMOD | ShiftMask,             XK_p,                      spawn,    SHCMD("pick_clip_history -p") },
+    { MODKEY,                       XK_b,                        spawn,    SHCMD("bm")},
+    { ControlMask,                  XK_grave,                    spawn,    SHCMD("pick_clip_history -l")},
+    { ControlMask | ShiftMask,      XK_grave,                    spawn,    SHCMD("pick_clip_history -s")},
+    { MODKEY | ControlMask | ShiftMask, XK_g,                    spawn,    SHCMD("pick_clip_history -g") },
+    { MODKEY | ControlMask | ShiftMask, XK_p,                    spawn,    SHCMD("pick_clip_history -p") },
     // Power
-    { 0,                            XF86XK_Sleep,              spawn,    SHCMD("lock-sleep")},
-    { 0,                            XF86XK_PowerOff,           spawn,    SHCMD("sysact")},
+    { 0,                            XF86XK_Sleep,                spawn,    SHCMD("lock-sleep")},
+    { 0,                            XF86XK_PowerOff,             spawn,    SHCMD("sysact")},
     // Brightness
-    { SMOD,                         XK_equal,                  spawn,    SHCMD("brightnessctl set 1000") },
-    { 0,                            XF86XK_MonBrightnessDown,  spawn,    SHCMD("brightnessctl set 5-") },
-    { 0,                            XF86XK_MonBrightnessUp,    spawn,    SHCMD("brightnessctl set 5+") },
-    { SMOD,                         XK_j,                      spawn,    SHCMD("brightnessctl set 5-") },
-    { SMOD,                         XK_k,                      spawn,    SHCMD("brightnessctl set 5+") },
-    { 0,                            XF86XK_TouchpadOff,        spawn,    SHCMD("synclient TouchpadOff=1") },
-    { 0,                            XF86XK_TouchpadOn,         spawn,    SHCMD("synclient TouchpadOff=0") },
+    { MODKEY | ShiftMask,           XK_equal,                    spawn,    SHCMD("brightnessctl set 100000") },
+    { 0,                            XF86XK_MonBrightnessDown,    spawn,    SHCMD("brightnessctl set 5000-") },
+    { 0,                            XF86XK_MonBrightnessUp,      spawn,    SHCMD("brightnessctl set 5000+") },
+    { MODKEY | ShiftMask,           XK_j,                        spawn,    SHCMD("brightnessctl set 5000-") },
+    { MODKEY | ShiftMask,           XK_k,                        spawn,    SHCMD("brightnessctl set 5000+") },
+    { 0,                            XF86XK_TouchpadOff,          spawn,    SHCMD("synclient TouchpadOff=1") },
+    { 0,                            XF86XK_TouchpadOn,           spawn,    SHCMD("synclient TouchpadOff=0") },
 
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
